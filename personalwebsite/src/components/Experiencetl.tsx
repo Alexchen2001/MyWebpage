@@ -7,15 +7,12 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
-// Define Props
-interface TimelineData {
-  label: string; // The content of each timeline item
-}
+import OutlinedCard from './Expcard';
+import { CardData } from '../types';
 
 interface AlternateTimelineProps {
   title: string; // Title for the timeline
-  timelineItems: TimelineData[]; // Array of timeline items
+  timelineItems: CardData[]; // Array of timeline items
 }
 
 const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
@@ -45,7 +42,18 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               <TimelineDot />
               {index < timelineItems.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
-            <TimelineContent>{item.label}</TimelineContent>
+            <TimelineContent>
+            <div className="cards-container">
+              <OutlinedCard
+                title={item.jobname}
+                subtitle={item.exptype}
+                subsubtitle={item.employmentlocation}
+                description={item.employmentdate}
+                buttonText={item.buttonText}
+                onButtonClick={() => alert(`You clicked on ${item.jobname}`)}
+              />
+            </div>
+            </TimelineContent>
           </TimelineItem>
         ))}
       </Timeline>

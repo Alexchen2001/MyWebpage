@@ -4,19 +4,12 @@ import NavigationBar from './components/Navbar';
 import ProfileAvatar from './components/Profilepic';
 import ProfileSection from './components/Aboutme';
 import AlternateTimeline from './components/Experiencetl';
-import OutlinedCard from './components/Expcard';
+import Footer from './components/Footer';
 import cardData from './components/assets/experience.json';
-import { CardData } from './types'; // Import the interface
+import { CardData } from './types'; 
 function App() {
-  const timelineData = [
-    { label: 'Started College in 2015' },
-    { label: 'Internship at XYZ Corp in 2017' },
-    { label: 'Graduated in 2019' },
-    { label: 'Joined ABC Company in 2020' },
-    { label: 'Promoted to Senior Developer in 2023' },
-  ];
 
-  const data: CardData = cardData as CardData;
+  const data: CardData[] = cardData as CardData[]; // // Cast the JSON data to the interface
 
   return (
     <div>
@@ -30,15 +23,10 @@ function App() {
     />
     <AlternateTimeline 
     title="My Career Journey"
-    timelineItems={timelineData}
+    timelineItems={data}
     />
-    <OutlinedCard
-        title={data.title}
-        subtitle={data.subtitle}
-        description={data.description}
-        buttonText={data.buttonText}
-        onButtonClick={() => alert(`You clicked on ${data.title}`)}
-      />
+    <Footer />
+      
       
     </div>
       

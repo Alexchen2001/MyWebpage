@@ -1,10 +1,11 @@
-export interface CardData {
-    title: string;
-    subtitle: string;
-    description: string;
+export interface CardData{
+    jobname: string;
+    exptype: string;
+    employmentlocation: string;
+    employmentdate: string;
     buttonText: string;
   }
-  
-  // Add this to ensure it's recognized as a module
+
+
   export {};
   

@@ -1,7 +1,30 @@
-{
-    "title": "Benevolent",
-    "subtitle": "Word of the Day",
-    "description": "Well meaning and kindly. \"A benevolent smile.\"",
-    "buttonText": "Learn More"
-}
-  
+[
+    {
+      "jobname": "Comcast",
+      "exptype": "Work Experience",
+      "employmentlocation": "Philadelphia, PA",
+      "employmentdate": "June 2019 - Present",
+      "buttonText": "Learn More"
+    },
+    {
+      "jobname": "Amazon",
+      "exptype": "Internship",
+      "employmentlocation": "Seattle, WA",
+      "employmentdate": "June 2018 - August 2018",
+      "buttonText": "View Details"
+    },
+    {
+        "jobname": "Comcast",
+        "exptype": "Work Experience",
+        "employmentlocation": "Philadelphia, PA",
+        "employmentdate": "June 2019 - Present",
+        "buttonText": "Learn More"
+      },
+      {
+        "jobname": "Comcast",
+        "exptype": "Work Experience",
+        "employmentlocation": "Philadelphia, PA",
+        "employmentdate": "June 2019 - Present",
+        "buttonText": "Learn More"
+      }
+  ]

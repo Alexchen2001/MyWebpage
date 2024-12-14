@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 interface OutlinedCardProps {
   title: string; // Title of the card
   subtitle: string; // Subtitle of the card
+  subsubtitle: string; // Subsubtitle of the card
   description: string; // Main description content
   buttonText: string; // Text for the button
   onButtonClick: () => void; // Callback for the button click event
@@ -17,12 +18,17 @@ interface OutlinedCardProps {
 const OutlinedCard: React.FC<OutlinedCardProps> = ({
   title,
   subtitle,
+  subsubtitle,
   description,
   buttonText,
   onButtonClick,
 }) => {
   return (
-    <Box sx={{ minWidth: 275 }}>
+    <Box sx={{
+      minWidth: 275,
+      maxWidth: 400, // Add maxWidth here
+      margin: 'auto', // Center horizontally (optional)
+    }}>
       <Card variant="outlined">
         <CardContent>
           {/* Subtitle */}
@@ -37,7 +43,7 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
 
           {/* Description */}
           <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>
-            adjective
+            {subsubtitle}
           </Typography>
           <Typography variant="body2">
             {description}
@@ -45,7 +51,7 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
         </CardContent>
 
         {/* Button Section */}
-        <CardActions>
+        <CardActions sx={{ justifyContent: 'center' }}>
           <Button size="small" onClick={onButtonClick}>
             {buttonText}
           </Button>
