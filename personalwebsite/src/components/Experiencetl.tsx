@@ -50,7 +50,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 subsubtitle={item.employmentlocation}
                 description={item.employmentdate}
                 buttonText={item.buttonText}
-                onButtonClick={() => alert(`You clicked on ${item.jobname}`)}
               />
             </div>
             </TimelineContent>

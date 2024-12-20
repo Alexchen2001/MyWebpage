@@ -6,6 +6,7 @@ import ProfileSection from './components/Aboutme';
 import AlternateTimeline from './components/Experiencetl';
 import Footer from './components/Footer';
 import cardData from './components/assets/experience.json';
+import FullWidthTabs from './components/Projecttab';
 import { CardData } from './types'; 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
     title="My Career Journey"
     timelineItems={data}
     />
+    <FullWidthTabs />
     <Footer />
       
       
