@@ -5,7 +5,10 @@ export interface CardData{
     employmentdate: string;
     buttonText: string;
     highlights?: string[];
+    track?: ExperienceTrack;
   }
+
+export type ExperienceTrack = 'Software Engineering' | 'Marketing Operations' | 'Education Teaching';
 
 export interface EducationItem {
   school: string;

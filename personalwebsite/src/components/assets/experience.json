@@ -5,6 +5,7 @@
     "employmentlocation": "Remote (Wisconsin-based)",
     "employmentdate": "April 2025 - Present",
     "buttonText": "Web3 Platform + Festival Scale",
+    "track": "Software Engineering",
     "highlights": [
       "Sole backend engineer owning Firebase database design and API implementation/maintenance.",
       "Designed concert NFT distribution using Google Maps/Geolocation APIs with proximity and venue rules.",
@@ -18,6 +19,7 @@
     "employmentlocation": "Seattle, WA",
     "employmentdate": "September 2023 - June 2024",
     "buttonText": "AWS Serverless + NLP Pipeline",
+    "track": "Software Engineering",
     "highlights": [
       "Built scraping/data processing platform using Lambda, S3, API Gateway, EventBridge, Step Functions, Python, and spaCy.",
       "Implemented end-to-end ingestion and normalization for multi-source artist data.",
@@ -31,6 +33,7 @@
     "employmentlocation": "Seattle, WA",
     "employmentdate": "June 2023 - August 2023",
     "buttonText": "C# .NET Medical Imaging",
+    "track": "Software Engineering",
     "highlights": [
       "Contributed to a Razor Pages app and implemented image checks for rotation, color balance, and brightness.",
       "Built dynamic UI components and improved accessibility/cross-browser behavior.",

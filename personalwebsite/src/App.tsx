@@ -62,6 +62,7 @@ function App() {
           <AlternateTimeline 
             title="Professional Experience"
             timelineItems={data}
+            themeMode={themeMode}
           />
         </section>
 
