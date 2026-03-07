@@ -125,23 +125,27 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             </Typography>
 
             {/* Stats Section */}
-            <Grid container spacing={2} sx={{ mb: 4 }}>
+            <Grid container spacing={2} sx={{ mb: 4 }} alignItems="flex-end">
               {[
-                { title: 'Graduate GPA', value: '4.00/4.00' },
-                { title: 'Production Events', value: '300K Planned Scale' },
-                { title: 'Coverage Achieved', value: '100% Unit Tests' },
+                { title: 'Graduate GPA', value: '4.00/4.00', level: 0.62 },
+                { title: 'Production Events', value: '300K Planned Scale', level: 0.9 },
+                { title: 'Coverage Achieved', value: '100% Unit Tests', level: 0.76 },
               ].map((stat, index) => (
                 <Grid size={{ xs: 12, sm: 4 }} key={index}>
                   <Paper
                     elevation={0}
                     sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'flex-end',
                       textAlign: 'center',
-                      py: 3,
+                      py: 2.2,
                       px: 2,
                       background: `linear-gradient(145deg, ${primaryColor}, var(--violet-500))`,
                       color: '#f8fafc',
                       borderRadius: 3.2,
                       boxShadow: '0 18px 34px rgba(5, 14, 27, 0.2)',
+                      minHeight: { xs: 120, sm: `${Math.round(170 * stat.level)}px` },
                       transition: 'transform 260ms ease',
                       '&:hover': {
                         transform: 'translateY(-6px)',
