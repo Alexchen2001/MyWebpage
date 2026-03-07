@@ -34,11 +34,11 @@ function ProfileAvatar(): JSX.Element {
               Alexander Chen
             </Typography>
             <Typography sx={{ color: 'var(--ink-700)', mb: 2.5, maxWidth: 550 }}>
-              Backend-focused software engineer building cloud systems, data pipelines, and product experiences that
+              Full-stack software engineer building cloud systems, data pipelines, and product experiences that
               scale from prototype to production.
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2.5 }}>
-              {['MSCS @ Georgia Tech', 'Backend Engineer', 'Web3 + Cloud'].map((tag) => (
+              {['MSCS @ Georgia Tech', 'Full Stack Engineer', 'Web3 + Cloud'].map((tag) => (
                 <Box
                   key={tag}
                   sx={{
