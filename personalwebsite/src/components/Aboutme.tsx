@@ -71,15 +71,15 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
   return (
     <Box
       sx={{
-        py: { xs: 5, md: 8 },
+        py: { xs: 4, md: 7 },
         px: 2,
-        maxWidth: 1240,
+        maxWidth: 1100,
         mx: 'auto',
       }}
     >
-      <Grid container spacing={4} justifyContent="center">
+      <Grid container spacing={{ xs: 2.5, md: 4 }} justifyContent="center" alignItems="flex-start">
         {/* Left Section: Avatar */}
-        <Grid size={{ xs: 12, md: 5, lg: 4 }}>
+        <Grid size={{ xs: 12, md: 5, lg: 4.5 }}>
           <Paper
             elevation={0}
             sx={{
@@ -106,7 +106,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         </Grid>
 
         {/* Right Section: About Me Content */}
-        <Grid size={{ xs: 12, md: 7 }}>
+        <Grid size={{ xs: 12, md: 7, lg: 7.5 }}>
           <Box>
             <Typography
               variant="h4"

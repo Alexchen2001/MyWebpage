@@ -6,9 +6,9 @@ import avatar from './assets/avatar.jpg';
 
 function ProfileAvatar(): JSX.Element {
   return (
-    <Box sx={{ mt: { xs: 4, md: 8 }, px: 2 }}>
-      <Grid container justifyContent="center">
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+    <Box sx={{ mt: { xs: 3, md: 6 }, px: 2, maxWidth: 1100, mx: 'auto' }}>
+      <Grid container justifyContent="center" alignItems="center">
+        <Grid size={{ xs: 12, sm: 10, md: 6, lg: 4 }}>
           <Box
             display="flex"
             justifyContent="center"
@@ -24,8 +24,8 @@ function ProfileAvatar(): JSX.Element {
               alt="Profile Avatar"
               src={avatar}
               sx={{
-                width: { xs: 220, md: 310 },
-                height: { xs: 220, md: 310 },
+                width: { xs: 200, sm: 230, md: 280, lg: 300 },
+                height: { xs: 200, sm: 230, md: 280, lg: 300 },
                 border: '6px solid rgba(255,255,255,0.75)',
                 boxShadow: '0 30px 60px rgba(10, 21, 36, 0.35)',
               }}

@@ -1,4 +1,6 @@
 .site-shell {
+  --sidebar-w: 220px;
+  --content-max: 1100px;
   min-height: 100vh;
   position: relative;
   overflow: hidden;
@@ -7,6 +9,8 @@
 .site-main {
   position: relative;
   z-index: 3;
+  padding-top: 72px;
+  padding-inline: 0.75rem;
 }
 
 .cursor-glow {
@@ -26,7 +30,7 @@
 
 .page-section {
   position: relative;
-  padding: 0.5rem 0;
+  padding: 0.25rem 0;
 }
 
 .reveal-on-scroll {
@@ -126,5 +130,13 @@
 
   .hero-section {
     padding-top: 1rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .site-main {
+    padding-top: 0;
+    padding-left: calc(var(--sidebar-w) + 1rem);
+    padding-right: 1rem;
   }
 }

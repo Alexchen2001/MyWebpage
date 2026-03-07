@@ -45,9 +45,9 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
 
   return (
     <Box sx={{
-      minWidth: 275,
-      maxWidth: 400, // Add maxWidth here
-      margin: 'auto', // Center horizontally (optional)
+      width: '100%',
+      maxWidth: 520,
+      margin: 'auto',
       py: 1,
     }}>
       <Card
@@ -55,6 +55,7 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
         onMouseMove={handleTilt}
         onMouseLeave={resetTilt}
         sx={{
+          width: '100%',
           position: 'relative',
           overflow: 'hidden',
           borderRadius: 3,

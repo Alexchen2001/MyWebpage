@@ -58,9 +58,9 @@ export default function RecentProjects() {
     <Box
       sx={{
         textAlign: 'center',
-        py: { xs: 5, md: 8 },
+        py: { xs: 4, md: 7 },
         px: 2,
-        maxWidth: 1240,
+        maxWidth: 1100,
         mx: 'auto',
       }}
     >
@@ -116,10 +116,8 @@ export default function RecentProjects() {
           mt: 4,
           display: 'grid',
           gap: 2,
-          gridTemplateColumns: {
-            xs: '1fr',
-            md: 'repeat(2, minmax(0, 1fr))',
-          },
+          justifyContent: 'center',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 520px))',
         }}
       >
         {visibleProjects.map((project, idx) => (

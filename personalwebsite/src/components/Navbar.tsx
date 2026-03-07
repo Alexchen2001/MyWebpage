@@ -30,16 +30,31 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
 
   return (
     <AppBar
-      position="sticky"
+      position="fixed"
       sx={{
-        background: `linear-gradient(120deg, rgba(6, 19, 34, 0.78), ${navBarColor})`,
-        backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        background: `linear-gradient(160deg, rgba(6, 19, 34, 0.9), ${navBarColor})`,
+        backdropFilter: 'blur(12px)',
+        borderRight: { md: '1px solid rgba(255, 255, 255, 0.15)' },
+        borderBottom: { xs: '1px solid rgba(255, 255, 255, 0.15)', md: 'none' },
         boxShadow: '0 10px 30px rgba(9, 17, 28, 0.22)',
+        width: { xs: '100%', md: 220 },
+        height: { xs: 'auto', md: '100vh' },
+        left: 0,
+        top: 0,
+        zIndex: 1200,
       }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: 'center' }}>
+      <Container maxWidth={false} sx={{ px: { xs: 2, md: 1.25 }, height: '100%' }}>
+        <Toolbar
+          disableGutters
+          sx={{
+            justifyContent: { xs: 'center', md: 'flex-start' },
+            alignItems: { xs: 'center', md: 'flex-start' },
+            minHeight: { xs: 64, md: '100%' },
+            py: { xs: 0, md: 2 },
+            flexDirection: { xs: 'row', md: 'column' },
+          }}
+        >
           {/* Mobile Menu */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -78,27 +93,37 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
             </Menu>
           </Box>
 
-          {/* Centered Menu for Desktop */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', flexGrow: 1 }}>
+          {/* Menu for Desktop */}
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              flexDirection: 'column',
+              justifyContent: 'center',
+              flexGrow: 1,
+              width: '100%',
+              gap: 0.35,
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
                 href={`#${page.toLowerCase()}`}
                 onClick={handleCloseNavMenu}
                 sx={{
-                  my: 2,
+                  my: 0.4,
                   color: '#f8fafc',
-                  display: 'block',
-                  mx: 1.5,
+                  justifyContent: 'flex-start',
                   fontWeight: 700,
                   letterSpacing: '0.04em',
                   textTransform: 'uppercase',
                   borderRadius: 999,
-                  px: 2.2,
+                  px: 2,
+                  py: 1,
+                  width: '100%',
                   transition: 'all 220ms ease',
                   '&:hover': {
                     backgroundColor: 'rgba(8, 145, 178, 0.2)',
-                    transform: 'translateY(-1px)',
+                    transform: 'translateX(2px)',
                   },
                 }}
               >

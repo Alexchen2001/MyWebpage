@@ -7,6 +7,8 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 import OutlinedCard from './Expcard';
 import { CardData } from '../types';
 
@@ -19,8 +21,11 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
   title,
   timelineItems,
 }) => {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
-    <Box sx={{ py: { xs: 5, md: 8 }, px: 2, textAlign: 'center', maxWidth: 1240, mx: 'auto' }}>
+    <Box sx={{ py: { xs: 4, md: 7 }, px: 2, textAlign: 'center', maxWidth: 1100, mx: 'auto' }}>
       {/* Dynamic Title */}
       <Typography
         variant="h2"
@@ -37,14 +42,20 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
       </Typography>
 
       {/* Dynamic Timeline */}
-      <Timeline position="alternate" sx={{ '& .MuiTimelineItem-root:before': { flex: 0 } }}>
+      <Timeline
+        position={isDesktop ? 'alternate' : 'right'}
+        sx={{
+          px: { xs: 0, md: 1 },
+          '& .MuiTimelineItem-root:before': { flex: isDesktop ? 0 : 0.02 },
+        }}
+      >
         {timelineItems.map((item, index) => (
           <TimelineItem key={index}>
             <TimelineSeparator>
               <TimelineDot sx={{ bgcolor: 'var(--accent-700)', boxShadow: '0 0 0 6px rgba(201,108,27,0.2)' }} />
               {index < timelineItems.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
-            <TimelineContent>
+            <TimelineContent sx={{ py: 0.5, px: { xs: 1, md: 2 } }}>
             <div className="cards-container">
               <OutlinedCard
                 title={item.jobname}

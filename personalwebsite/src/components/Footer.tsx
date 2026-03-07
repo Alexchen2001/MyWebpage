@@ -11,13 +11,13 @@ const Footer: React.FC = () => {
       component="footer"
       sx={{
         width: '100%',
-        maxWidth: 1240,
+        maxWidth: 1100,
         mx: 'auto',
-        mt: 3,
+        mt: 2,
         mb: 3,
         color: '#eef4fb',
         py: 3,
-        px: 2,
+        px: { xs: 2, md: 3 },
         textAlign: 'center',
         borderRadius: 3,
         background: 'linear-gradient(120deg, #0f2137, #1b3f66)',
