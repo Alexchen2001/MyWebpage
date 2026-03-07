@@ -66,7 +66,7 @@ export default function RecentProjects() {
     >
       {/* Section Title */}
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 1.5, color: 'var(--ink-900)' }}>
-        Recent Projects
+        Project Spotlight
       </Typography>
       <Typography variant="body1" sx={{ mb: 4, color: 'var(--ink-700)' }}>
         Selected project work with production-ready architecture and cloud deployment.
@@ -87,11 +87,11 @@ export default function RecentProjects() {
             px: 3,
             borderColor: 'rgba(15, 33, 55, 0.28)',
             color: 'var(--ink-900)',
-            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+            background: 'linear-gradient(145deg, rgba(255,255,255,0.72), rgba(224,233,251,0.62))',
             fontWeight: 700,
           },
           '& .MuiButton-root.Mui-selected': {
-            background: 'linear-gradient(120deg, var(--accent-700), var(--teal-500))',
+            background: 'linear-gradient(120deg, var(--accent-700), var(--violet-500))',
             color: '#fff',
             borderColor: 'transparent',
             '&:hover': {
@@ -132,8 +132,8 @@ export default function RecentProjects() {
               position: 'relative',
               overflow: 'hidden',
               borderRadius: 3,
-              border: '1px solid rgba(15, 33, 55, 0.15)',
-              background: 'rgba(255, 255, 255, 0.78)',
+              border: '1px solid rgba(99, 102, 241, 0.2)',
+              background: 'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(227,236,252,0.72))',
               boxShadow: '0 18px 32px rgba(15, 33, 55, 0.1)',
               animation: `cardSlideIn 420ms ease ${idx * 60}ms both`,
               transform:

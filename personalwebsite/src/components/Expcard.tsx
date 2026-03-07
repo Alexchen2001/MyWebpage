@@ -59,8 +59,8 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
           position: 'relative',
           overflow: 'hidden',
           borderRadius: 3,
-          borderColor: 'rgba(15, 33, 55, 0.14)',
-          background: 'linear-gradient(160deg, rgba(255,255,255,0.92), rgba(232,238,247,0.86))',
+          borderColor: 'rgba(99, 102, 241, 0.18)',
+          background: 'linear-gradient(160deg, rgba(255,255,255,0.9), rgba(224,233,251,0.84))',
           boxShadow: '0 18px 40px rgba(15, 33, 55, 0.12)',
           transform:
             'perspective(860px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0)',

@@ -33,9 +33,9 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
           fontWeight: 800,
           mb: 4,
           color: 'var(--ink-900)',
-          textTransform: 'uppercase',
+          textTransform: 'none',
           fontSize: { xs: '2rem', md: '3rem' },
-          letterSpacing: '0.04em',
+          letterSpacing: '0.02em',
         }}
       >
         {title}

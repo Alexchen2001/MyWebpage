@@ -19,10 +19,10 @@ const Footer: React.FC = () => {
         py: 3,
         px: { xs: 2, md: 3 },
         textAlign: 'center',
-        borderRadius: 3,
-        background: 'linear-gradient(120deg, #0f2137, #1b3f66)',
-        border: '1px solid rgba(255,255,255,0.14)',
-        boxShadow: '0 14px 30px rgba(10, 21, 36, 0.25)',
+        borderRadius: 4,
+        background: 'linear-gradient(130deg, #111933, #2b2a5a)',
+        border: '1px solid rgba(255,255,255,0.2)',
+        boxShadow: '0 20px 40px rgba(10, 21, 36, 0.3)',
       }}
     >
       <Typography variant="body1">

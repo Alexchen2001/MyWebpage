@@ -55,6 +55,18 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
             flexDirection: { xs: 'row', md: 'column' },
           }}
         >
+          <Typography
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              color: '#eaf2ff',
+              fontWeight: 800,
+              letterSpacing: '0.06em',
+              mr: 1,
+            }}
+          >
+            ALEX CHEN
+          </Typography>
+
           {/* Mobile Menu */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -98,38 +110,56 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
             sx={{
               display: { xs: 'none', md: 'flex' },
               flexDirection: 'column',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               flexGrow: 1,
               width: '100%',
-              gap: 0.35,
             }}
           >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                href={`#${page.toLowerCase()}`}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 0.4,
-                  color: '#f8fafc',
-                  justifyContent: 'flex-start',
-                  fontWeight: 700,
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  borderRadius: 999,
-                  px: 2,
-                  py: 1,
-                  width: '100%',
-                  transition: 'all 220ms ease',
-                  '&:hover': {
-                    backgroundColor: 'rgba(8, 145, 178, 0.2)',
-                    transform: 'translateX(2px)',
-                  },
-                }}
-              >
-                {page}
-              </Button>
-            ))}
+            <Box sx={{ px: 1, py: 1 }}>
+              <Typography sx={{ color: '#eaf2ff', fontWeight: 800, letterSpacing: '0.07em', fontSize: '0.95rem' }}>
+                ALEX CHEN
+              </Typography>
+              <Typography sx={{ color: 'rgba(234, 242, 255, 0.72)', fontSize: '0.78rem', mt: 0.4 }}>
+                Software Engineer
+              </Typography>
+            </Box>
+
+            <Box sx={{ width: '100%', pt: 1 }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  href={`#${page.toLowerCase()}`}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 0.4,
+                    color: '#f8fafc',
+                    justifyContent: 'flex-start',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                    borderRadius: 999,
+                    px: 2,
+                    py: 1,
+                    width: '100%',
+                    transition: 'all 220ms ease',
+                    '&:hover': {
+                      backgroundColor: 'rgba(14, 165, 164, 0.25)',
+                      transform: 'translateX(2px)',
+                    },
+                  }}
+                >
+                  {page}
+                </Button>
+              ))}
+            </Box>
+
+            <Box sx={{ px: 1, pb: 1.5 }}>
+              <Typography sx={{ color: 'rgba(234, 242, 255, 0.62)', fontSize: '0.72rem', lineHeight: 1.5 }}>
+                Atlanta, GA
+                <br />
+                Open to software engineering roles.
+              </Typography>
+            </Box>
           </Box>
         </Toolbar>
       </Container>

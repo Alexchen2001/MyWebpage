@@ -83,11 +83,11 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
           <Paper
             elevation={0}
             sx={{
-              p: 2,
+              p: 2.2,
               borderRadius: 4,
-              background: 'rgba(255, 255, 255, 0.66)',
-              border: '1px solid rgba(255, 255, 255, 0.55)',
-              boxShadow: '0 22px 55px rgba(15, 33, 55, 0.18)',
+              background: 'linear-gradient(150deg, rgba(255,255,255,0.8), rgba(226,236,252,0.72))',
+              border: '1px solid rgba(255, 255, 255, 0.78)',
+              boxShadow: '0 24px 66px rgba(15, 33, 55, 0.2)',
             }}
           >
             <Avatar
@@ -100,6 +100,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 maxWidth: '100%',
                 borderRadius: 3,
                 transform: 'rotate(-1deg)',
+                filter: 'saturate(1.06)',
               }}
             />
           </Paper>
@@ -136,9 +137,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                       textAlign: 'center',
                       py: 3,
                       px: 2,
-                      background: `linear-gradient(160deg, ${primaryColor}, var(--teal-500))`,
+                      background: `linear-gradient(145deg, ${primaryColor}, var(--violet-500))`,
                       color: '#f8fafc',
-                      borderRadius: 3,
+                      borderRadius: 3.2,
                       boxShadow: '0 18px 34px rgba(5, 14, 27, 0.2)',
                       transition: 'transform 260ms ease',
                       '&:hover': {
@@ -180,9 +181,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                   sx={{
                     p: 2,
                     mb: 1.5,
-                    borderRadius: 2.5,
-                    border: '1px solid rgba(15, 33, 55, 0.12)',
-                    background: 'rgba(255,255,255,0.7)',
+                    borderRadius: 3,
+                    border: '1px solid rgba(99, 102, 241, 0.16)',
+                    background: 'linear-gradient(145deg, rgba(255,255,255,0.75), rgba(228,238,253,0.65))',
                   }}
                 >
                   <Typography sx={{ fontWeight: 800, color: 'var(--ink-900)' }}>{item.school}</Typography>
@@ -213,8 +214,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     fontWeight: 700,
                     fontSize: '0.85rem',
                     color: 'var(--ink-900)',
-                    border: '1px solid rgba(15, 33, 55, 0.2)',
-                    background: 'rgba(255,255,255,0.72)',
+                    border: '1px solid rgba(14, 165, 164, 0.28)',
+                    background: 'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(218,246,245,0.52))',
                   }}
                 >
                   {skill}
