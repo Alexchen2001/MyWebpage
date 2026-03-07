@@ -17,9 +17,9 @@ function ProfileAvatar(): JSX.Element {
             sx={{
               p: { xs: 2.5, md: 3.2 },
               borderRadius: 5,
-              border: '1px solid rgba(255, 255, 255, 0.48)',
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.78), rgba(222,233,251,0.68))',
-              boxShadow: '0 28px 70px rgba(15, 22, 42, 0.2)',
+              border: '1px solid var(--panel-border)',
+              background: 'var(--panel-bg-soft)',
+              boxShadow: 'var(--panel-shadow)',
             }}
           >
             <Typography
@@ -31,7 +31,7 @@ function ProfileAvatar(): JSX.Element {
                 fontWeight: 800,
               }}
             >
-              Alex Chen
+              Alexander Chen
             </Typography>
             <Typography sx={{ color: 'var(--ink-700)', mb: 2.5, maxWidth: 550 }}>
               Backend-focused software engineer building cloud systems, data pipelines, and product experiences that
@@ -45,7 +45,7 @@ function ProfileAvatar(): JSX.Element {
                     px: 1.2,
                     py: 0.5,
                     borderRadius: 999,
-                    background: 'rgba(14, 165, 164, 0.14)',
+                    background: 'rgba(34, 211, 238, 0.14)',
                     border: '1px solid rgba(14, 165, 164, 0.35)',
                     fontWeight: 700,
                     fontSize: '0.84rem',
@@ -82,7 +82,7 @@ function ProfileAvatar(): JSX.Element {
                   borderRadius: 999,
                   textTransform: 'none',
                   fontWeight: 700,
-                  borderColor: 'rgba(18, 26, 45, 0.35)',
+                  borderColor: 'var(--panel-border)',
                   color: 'var(--ink-900)',
                 }}
               >
@@ -109,7 +109,7 @@ function ProfileAvatar(): JSX.Element {
               sx={{
                 width: { xs: 200, sm: 230, md: 280, lg: 300 },
                 height: { xs: 200, sm: 230, md: 280, lg: 300 },
-                border: '8px solid rgba(255,255,255,0.8)',
+                border: '8px solid rgba(168, 189, 255, 0.45)',
                 boxShadow: '0 36px 66px rgba(10, 21, 36, 0.35)',
               }}
             />

@@ -15,14 +15,14 @@ const Footer: React.FC = () => {
         mx: 'auto',
         mt: 2,
         mb: 3,
-        color: '#eef4fb',
+        color: 'var(--ink-900)',
         py: 3,
         px: { xs: 2, md: 3 },
         textAlign: 'center',
         borderRadius: 4,
-        background: 'linear-gradient(130deg, #111933, #2b2a5a)',
-        border: '1px solid rgba(255,255,255,0.2)',
-        boxShadow: '0 20px 40px rgba(10, 21, 36, 0.3)',
+        background: 'var(--panel-bg)',
+        border: '1px solid var(--panel-border)',
+        boxShadow: 'var(--panel-shadow)',
       }}
     >
       <Typography variant="body1">
@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 0.6,
-            color: '#e6f4ff',
+            color: 'var(--ink-900)',
             fontWeight: 700,
           }}
         >
@@ -57,7 +57,7 @@ const Footer: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 0.6,
-            color: '#e6f4ff',
+            color: 'var(--ink-900)',
             fontWeight: 700,
           }}
         >

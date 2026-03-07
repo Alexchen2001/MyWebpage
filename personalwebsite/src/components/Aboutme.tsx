@@ -26,7 +26,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       gpa: '4.00/4.00',
       date: 'August 2025 - Present',
       location: 'Atlanta, GA',
-      coursework: 'Software Architecture & Design, Computer Networks',
+      coursework:
+        'Software Architecture & Design, Computer Networks, Graduate Introduction to Operating Systems, Introduction to Information Security',
     },
     {
       school: 'Seattle University',
@@ -35,7 +36,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
       date: 'September 2022 - June 2024',
       location: 'Seattle, WA',
       coursework:
-        'Data Structures and Algorithms (C++), Computer Architecture, Operating Systems, Software as a Service (Full-stack), Mobile Development (Flutter), User Experience, Big Data Analytics',
+        'Computer Organization, Data Structures, Foundations of Computer Science, Fundamentals of Databases, Computing Systems, Object-Oriented Development, Languages and Computation, Design & Analysis of Algorithms, Technical Communication & Project Management, Software Engineering & Project Development I, Software Engineering & Project Development II, Security in Computing, Software as a Service, Mobile Software Development, User Experience Design, Big Data Analytics, Software Engineering & Project Development III',
     },
   ];
 
@@ -85,9 +86,9 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             sx={{
               p: 2.2,
               borderRadius: 4,
-              background: 'linear-gradient(150deg, rgba(255,255,255,0.8), rgba(226,236,252,0.72))',
-              border: '1px solid rgba(255, 255, 255, 0.78)',
-              boxShadow: '0 24px 66px rgba(15, 33, 55, 0.2)',
+              background: 'var(--panel-bg-soft)',
+              border: '1px solid var(--panel-border)',
+              boxShadow: 'var(--panel-shadow)',
             }}
           >
             <Avatar
@@ -183,7 +184,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     mb: 1.5,
                     borderRadius: 3,
                     border: '1px solid rgba(99, 102, 241, 0.16)',
-                    background: 'linear-gradient(145deg, rgba(255,255,255,0.75), rgba(228,238,253,0.65))',
+                    background: 'var(--panel-bg)',
                   }}
                 >
                   <Typography sx={{ fontWeight: 800, color: 'var(--ink-900)' }}>{item.school}</Typography>
@@ -215,7 +216,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                     fontSize: '0.85rem',
                     color: 'var(--ink-900)',
                     border: '1px solid rgba(14, 165, 164, 0.28)',
-                    background: 'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(218,246,245,0.52))',
+                    background: 'var(--panel-bg)',
                   }}
                 >
                   {skill}

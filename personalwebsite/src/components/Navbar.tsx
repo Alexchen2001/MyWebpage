@@ -9,15 +9,20 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 
 // Define Props for the NavigationBar
 interface NavigationBarProps {
   navBarColor: string; // Pass-in parameter for navbar background color
+  onNavigate: (sectionId: string) => void;
+  themeMode: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
-const pages = ['Home', 'About', 'Experience', 'Projects', 'Contact'];
+const pages = ['Home', 'About', 'Experience', 'Projects', 'Contact', 'Blog'];
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, themeMode, onToggleTheme }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -28,14 +33,21 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
     setAnchorElNav(null);
   };
 
+  const handleNavClick = (event: React.MouseEvent<HTMLElement>, sectionId: string) => {
+    event.preventDefault();
+    onNavigate(sectionId);
+    handleCloseNavMenu();
+  };
+
   return (
     <AppBar
       position="fixed"
       sx={{
-        background: `linear-gradient(160deg, rgba(6, 19, 34, 0.9), ${navBarColor})`,
+        background: `linear-gradient(160deg, var(--nav-bg-start), ${navBarColor})`,
+        color: 'var(--nav-text)',
         backdropFilter: 'blur(12px)',
-        borderRight: { md: '1px solid rgba(255, 255, 255, 0.15)' },
-        borderBottom: { xs: '1px solid rgba(255, 255, 255, 0.15)', md: 'none' },
+        borderRight: { md: '1px solid var(--panel-border)' },
+        borderBottom: { xs: '1px solid var(--panel-border)', md: 'none' },
         boxShadow: '0 10px 30px rgba(9, 17, 28, 0.22)',
         width: { xs: '100%', md: 220 },
         height: { xs: 'auto', md: '100vh' },
@@ -58,14 +70,22 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
           <Typography
             sx={{
               display: { xs: 'block', md: 'none' },
-              color: '#eaf2ff',
+              color: 'var(--nav-text)',
               fontWeight: 800,
               letterSpacing: '0.06em',
               mr: 1,
             }}
           >
-            ALEX CHEN
+            ALEXANDER CHEN
           </Typography>
+
+          <IconButton
+            onClick={onToggleTheme}
+            sx={{ display: { xs: 'inline-flex', md: 'none' }, color: 'var(--nav-text)' }}
+            aria-label="Toggle theme mode"
+          >
+            {themeMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+          </IconButton>
 
           {/* Mobile Menu */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -96,7 +116,12 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} component="a" href={`#${page.toLowerCase()}`} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  component="a"
+                  href={`#${page.toLowerCase()}`}
+                  onClick={(event) => handleNavClick(event, page.toLowerCase())}
+                >
                   <Typography textAlign="center" fontWeight={700}>
                     {page}
                   </Typography>
@@ -116,10 +141,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
             }}
           >
             <Box sx={{ px: 1, py: 1 }}>
-              <Typography sx={{ color: '#eaf2ff', fontWeight: 800, letterSpacing: '0.07em', fontSize: '0.95rem' }}>
-                ALEX CHEN
+              <Typography sx={{ color: 'var(--nav-text)', fontWeight: 800, letterSpacing: '0.07em', fontSize: '0.95rem' }}>
+                ALEXANDER CHEN
               </Typography>
-              <Typography sx={{ color: 'rgba(234, 242, 255, 0.72)', fontSize: '0.78rem', mt: 0.4 }}>
+              <Typography sx={{ color: 'var(--nav-subtle)', fontSize: '0.78rem', mt: 0.4 }}>
                 Software Engineer
               </Typography>
             </Box>
@@ -129,10 +154,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
                 <Button
                   key={page}
                   href={`#${page.toLowerCase()}`}
-                  onClick={handleCloseNavMenu}
+                  onClick={(event) => handleNavClick(event, page.toLowerCase())}
                   sx={{
                     my: 0.4,
-                    color: '#f8fafc',
+                    color: 'var(--nav-text)',
                     justifyContent: 'flex-start',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
@@ -143,7 +168,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
                     width: '100%',
                     transition: 'all 220ms ease',
                     '&:hover': {
-                      backgroundColor: 'rgba(14, 165, 164, 0.25)',
+                      backgroundColor: 'var(--nav-hover)',
                       transform: 'translateX(2px)',
                     },
                   }}
@@ -153,8 +178,25 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
               ))}
             </Box>
 
+            <Button
+              onClick={onToggleTheme}
+              startIcon={themeMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+              sx={{
+                mx: 1,
+                mb: 1.2,
+                borderRadius: 999,
+                textTransform: 'none',
+                fontWeight: 700,
+                color: 'var(--nav-text)',
+                border: '1px solid var(--panel-border)',
+                background: 'rgba(0,0,0,0.08)',
+              }}
+            >
+              {themeMode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </Button>
+
             <Box sx={{ px: 1, pb: 1.5 }}>
-              <Typography sx={{ color: 'rgba(234, 242, 255, 0.62)', fontSize: '0.72rem', lineHeight: 1.5 }}>
+              <Typography sx={{ color: 'var(--nav-subtle)', fontSize: '0.72rem', lineHeight: 1.5 }}>
                 Atlanta, GA
                 <br />
                 Open to software engineering roles.

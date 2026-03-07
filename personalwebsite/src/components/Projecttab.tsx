@@ -87,7 +87,7 @@ export default function RecentProjects() {
             px: 3,
             borderColor: 'rgba(15, 33, 55, 0.28)',
             color: 'var(--ink-900)',
-            background: 'linear-gradient(145deg, rgba(255,255,255,0.72), rgba(224,233,251,0.62))',
+            background: 'var(--panel-bg-soft)',
             fontWeight: 700,
           },
           '& .MuiButton-root.Mui-selected': {
@@ -133,8 +133,8 @@ export default function RecentProjects() {
               overflow: 'hidden',
               borderRadius: 3,
               border: '1px solid rgba(99, 102, 241, 0.2)',
-              background: 'linear-gradient(145deg, rgba(255,255,255,0.78), rgba(227,236,252,0.72))',
-              boxShadow: '0 18px 32px rgba(15, 33, 55, 0.1)',
+              background: 'var(--panel-bg)',
+              boxShadow: '0 18px 32px rgba(1, 4, 12, 0.46)',
               animation: `cardSlideIn 420ms ease ${idx * 60}ms both`,
               transform:
                 'perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0)',

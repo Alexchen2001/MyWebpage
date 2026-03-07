@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import NavigationBar from './components/Navbar';
 import ProfileAvatar from './components/Profilepic';
@@ -7,11 +7,24 @@ import AlternateTimeline from './components/Experiencetl';
 import Footer from './components/Footer';
 import cardData from './components/assets/experience.json';
 import FullWidthTabs from './components/Projecttab';
+import BlogSection from './components/BlogSection';
 import { CardData } from './types'; 
 function App() {
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>('dark');
   const data: CardData[] = cardData as CardData[]; // // Cast the JSON data to the interface
+  const mainRef = useRef<HTMLElement | null>(null);
+
+  const handleNavigate = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode);
+  }, [themeMode]);
+
+  useEffect(() => {
+    const mainEl = mainRef.current;
     const revealTargets = document.querySelectorAll<HTMLElement>('.reveal-on-scroll');
     let observer: IntersectionObserver | null = null;
 
@@ -24,7 +37,10 @@ function App() {
             }
           });
         },
-        { threshold: 0.2 }
+        {
+          threshold: 0.3,
+          root: mainEl,
+        }
       );
 
       revealTargets.forEach((el) => observer?.observe(el));
@@ -33,7 +49,7 @@ function App() {
     }
 
     const updateScroll = () => {
-      const scrollY = window.scrollY || 0;
+      const scrollY = mainEl?.scrollTop || 0;
       document.documentElement.style.setProperty('--scroll-y', `${scrollY}`);
     };
 
@@ -47,27 +63,31 @@ function App() {
     };
 
     updateScroll();
-    window.addEventListener('scroll', updateScroll, { passive: true });
+    mainEl?.addEventListener('scroll', updateScroll, { passive: true });
     window.addEventListener('mousemove', updatePointer);
 
     return () => {
       revealTargets.forEach((el) => observer?.unobserve(el));
       observer?.disconnect();
-      window.removeEventListener('scroll', updateScroll);
+      mainEl?.removeEventListener('scroll', updateScroll);
       window.removeEventListener('mousemove', updatePointer);
     };
   }, []);
 
   return (
     <div className="site-shell">
+      <div className="bg-stars" />
       <div className="bg-orb orb-a" />
       <div className="bg-orb orb-b" />
       <div className="bg-grid" />
       <div className="cursor-glow" />
       <NavigationBar 
       navBarColor="var(--accent-700)"
+      onNavigate={handleNavigate}
+      themeMode={themeMode}
+      onToggleTheme={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
       />
-      <main className="site-main">
+      <main className="site-main" ref={mainRef}>
         <section id="home" className="page-section hero-section reveal-on-scroll">
           <ProfileAvatar />
         </section>
@@ -92,6 +112,10 @@ function App() {
 
         <section id="contact" className="page-section reveal-on-scroll">
           <Footer />
+        </section>
+
+        <section id="blog" className="page-section reveal-on-scroll">
+          <BlogSection />
         </section>
       </main>
     </div>
