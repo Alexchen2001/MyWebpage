@@ -1,29 +1,11 @@
 import React, { useState } from 'react';
 import { Button, ButtonGroup, Typography, Box, Paper } from '@mui/material';
-
-type Category = 'All' | 'Full-Stack' | 'Back-End' | 'Front-End';
-
-interface Project {
-  name: string;
-  category: Exclude<Category, 'All'>;
-  summary: string;
-  stack: string;
-}
-
-const projects: Project[] = [
-  {
-    name: 'Panda-S E-Commerce Web Application',
-    category: 'Full-Stack',
-    summary:
-      'Built a full-stack e-commerce platform with REST APIs, product/user management, and NoSQL persistence deployed on Azure. Implemented authentication, catalog search/filtering, and admin workflows.',
-    stack: 'TypeScript, Angular, Node.js, Express, MongoDB, Azure',
-  },
-];
+import { projectCategories, ProjectCategory, projects } from '../data/projects';
 
 export default function RecentProjects() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>('All');
+  const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('All');
 
-  const handleCategoryChange = (category: Category) => {
+  const handleCategoryChange = (category: ProjectCategory) => {
     setSelectedCategory(category);
   };
 
@@ -100,7 +82,7 @@ export default function RecentProjects() {
           },
         }}
       >
-        {(['All', 'Full-Stack', 'Back-End', 'Front-End'] as Category[]).map((category) => (
+        {projectCategories.map((category) => (
           <Button
             key={category}
             onClick={() => handleCategoryChange(category)}
