@@ -11,6 +11,12 @@ import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import WorkRoundedIcon from '@mui/icons-material/WorkRounded';
+import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
+import MailRoundedIcon from '@mui/icons-material/MailRounded';
+import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 
 // Define Props for the NavigationBar
 interface NavigationBarProps {
@@ -20,7 +26,16 @@ interface NavigationBarProps {
   onToggleTheme: () => void;
 }
 
-const pages = ['Home', 'About', 'Experience', 'Projects', 'Contact', 'Blog'];
+const pages = ['Home', 'About', 'Experience', 'Projects', 'Blog', 'Contact'];
+
+const pageIcons: Record<string, React.ReactNode> = {
+  Home: <HomeRoundedIcon fontSize="small" />,
+  About: <PersonRoundedIcon fontSize="small" />,
+  Experience: <WorkRoundedIcon fontSize="small" />,
+  Projects: <RocketLaunchRoundedIcon fontSize="small" />,
+  Contact: <MailRoundedIcon fontSize="small" />,
+  Blog: <ArticleRoundedIcon fontSize="small" />,
+};
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, themeMode, onToggleTheme }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -122,7 +137,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, 
                   href={`#${page.toLowerCase()}`}
                   onClick={(event) => handleNavClick(event, page.toLowerCase())}
                 >
-                  <Typography textAlign="center" fontWeight={700}>
+                  <Typography sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.8 }} textAlign="center" fontWeight={700}>
+                    {pageIcons[page]}
                     {page}
                   </Typography>
                 </MenuItem>
@@ -155,6 +171,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, 
                   key={page}
                   href={`#${page.toLowerCase()}`}
                   onClick={(event) => handleNavClick(event, page.toLowerCase())}
+                  startIcon={pageIcons[page]}
                   sx={{
                     my: 0.4,
                     color: 'var(--nav-text)',

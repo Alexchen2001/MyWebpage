@@ -11,6 +11,7 @@ import BlogSection from './components/BlogSection';
 import { CardData } from './types'; 
 function App() {
   const [themeMode, setThemeMode] = useState<'light' | 'dark'>('dark');
+  const [showIntro, setShowIntro] = useState(true);
   const data: CardData[] = cardData as CardData[]; // // Cast the JSON data to the interface
   const mainRef = useRef<HTMLElement | null>(null);
 
@@ -22,6 +23,14 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
+
+  useEffect(() => {
+    const introTimer = window.setTimeout(() => {
+      setShowIntro(false);
+    }, 5200);
+
+    return () => window.clearTimeout(introTimer);
+  }, []);
 
   useEffect(() => {
     const mainEl = mainRef.current;
@@ -75,7 +84,13 @@ function App() {
   }, []);
 
   return (
-    <div className="site-shell">
+    <div className={`site-shell ${showIntro ? 'intro-active' : ''}`}>
+      <div className={`intro-overlay ${showIntro ? 'intro-visible' : 'intro-hidden'}`}>
+        <div className="intro-stars" />
+        <div className="intro-ring" />
+        <h1 className="intro-title">Welcome to Alexander Chen&apos;s Homepage</h1>
+        <p className="intro-subtitle">You will be navigating his academic and engineering journey</p>
+      </div>
       <div className="bg-stars" />
       <div className="bg-orb orb-a" />
       <div className="bg-orb orb-b" />
@@ -110,12 +125,12 @@ function App() {
           <FullWidthTabs />
         </section>
 
-        <section id="contact" className="page-section reveal-on-scroll">
-          <Footer />
-        </section>
-
         <section id="blog" className="page-section reveal-on-scroll">
           <BlogSection />
+        </section>
+
+        <section id="contact" className="page-section reveal-on-scroll">
+          <Footer />
         </section>
       </main>
     </div>

@@ -6,6 +6,87 @@
   overflow: hidden;
 }
 
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #1a2c57 0%, #050916 52%, #02040b 100%);
+  transition: opacity 700ms ease, visibility 700ms ease;
+}
+
+.intro-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.intro-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-shell.intro-active .site-main,
+.site-shell.intro-active .bg-stars,
+.site-shell.intro-active .bg-orb,
+.site-shell.intro-active .bg-grid,
+.site-shell.intro-active .cursor-glow,
+.site-shell.intro-active .MuiAppBar-root {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro-stars {
+  position: absolute;
+  inset: -10%;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(2px 2px at 60% 50%, rgba(173, 205, 255, 0.85), transparent),
+    radial-gradient(1px 1px at 80% 25%, rgba(255, 255, 255, 0.88), transparent),
+    radial-gradient(1px 1px at 35% 75%, rgba(167, 219, 255, 0.82), transparent);
+  background-size: 360px 220px;
+  animation: starWarp 3s ease forwards;
+}
+
+.intro-ring {
+  width: min(60vw, 460px);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 2px solid rgba(123, 176, 255, 0.55);
+  box-shadow: 0 0 70px rgba(99, 140, 255, 0.42);
+  animation: pulseIn 1.8s ease-in-out infinite;
+}
+
+.intro-title {
+  position: absolute;
+  margin: 0;
+  max-width: 80vw;
+  text-align: center;
+  padding: 0 1rem;
+  color: #f1f6ff;
+  font-size: clamp(1.4rem, 3.6vw, 2.8rem);
+  text-shadow: 0 4px 24px rgba(89, 143, 255, 0.52);
+  animation: introText 4.2s ease forwards;
+}
+
+.intro-subtitle {
+  position: absolute;
+  margin: 0;
+  max-width: 80vw;
+  text-align: center;
+  padding: 0 1rem;
+  color: #d5e6ff;
+  font-size: clamp(0.92rem, 2vw, 1.25rem);
+  transform: translateY(56px);
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 18px rgba(89, 143, 255, 0.44);
+  animation: introSubText 3.2s ease 1.5s forwards;
+}
+
 .bg-stars {
   position: fixed;
   inset: 0;
@@ -127,6 +208,61 @@
   }
   to {
     opacity: 0.9;
+  }
+}
+
+@keyframes starWarp {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseIn {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+@keyframes introText {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  35%,
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes introSubText {
+  0% {
+    opacity: 0;
+    transform: translateY(64px);
+  }
+  30%,
+  85% {
+    opacity: 1;
+    transform: translateY(56px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(48px);
   }
 }
 
