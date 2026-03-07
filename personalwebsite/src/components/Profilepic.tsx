@@ -8,7 +8,7 @@ function ProfileAvatar(): JSX.Element {
   return (
     <Box sx={{ mt: 10 }}>
       <Grid container justifyContent="center">
-        <Grid item xs={12} md={6} lg={4}>
+        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
           <Box display="flex" justifyContent="center">
             {/* Material UI Avatar with customized size */}
             <Avatar

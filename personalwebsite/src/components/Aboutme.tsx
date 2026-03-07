@@ -22,7 +22,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
     <Box sx={{ py: 10, px: 2, bgcolor: '#f5f5f5', minHeight: '100vh' }}>
       <Grid container spacing={4} justifyContent="center">
         {/* Left Section: Avatar */}
-        <Grid item xs={12} md={5} lg={4}>
+        <Grid size={{ xs: 12, md: 5, lg: 4 }}>
           <Paper elevation={3} sx={{ padding: 2 }}>
             <Avatar
               src={ProfilePic}
@@ -39,7 +39,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
         </Grid>
 
         {/* Right Section: About Me Content */}
-        <Grid item xs={12} md={7}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <Box>
             <Typography
               variant="h4"
@@ -59,7 +59,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 { title: 'Projects', value: '50+ Completed' },
                 { title: 'Corporate Experience', value: '7 Years Employment' },
               ].map((stat, index) => (
-                <Grid item xs={12} sm={4} key={index}>
+                <Grid size={{ xs: 12, sm: 4 }} key={index}>
                   <Paper
                     elevation={3}
                     sx={{
