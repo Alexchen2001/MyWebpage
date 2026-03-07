@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import NavigationBar from './components/Navbar';
 import ProfileAvatar from './components/Profilepic';
@@ -9,27 +9,91 @@ import cardData from './components/assets/experience.json';
 import FullWidthTabs from './components/Projecttab';
 import { CardData } from './types'; 
 function App() {
-
   const data: CardData[] = cardData as CardData[]; // // Cast the JSON data to the interface
 
+  useEffect(() => {
+    const revealTargets = document.querySelectorAll<HTMLElement>('.reveal-on-scroll');
+    let observer: IntersectionObserver | null = null;
+
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      revealTargets.forEach((el) => observer?.observe(el));
+    } else {
+      revealTargets.forEach((el) => el.classList.add('in-view'));
+    }
+
+    const updateScroll = () => {
+      const scrollY = window.scrollY || 0;
+      document.documentElement.style.setProperty('--scroll-y', `${scrollY}`);
+    };
+
+    const updatePointer = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth - 0.5) * 2;
+      const y = (event.clientY / window.innerHeight - 0.5) * 2;
+      document.documentElement.style.setProperty('--pointer-x', x.toFixed(3));
+      document.documentElement.style.setProperty('--pointer-y', y.toFixed(3));
+      document.documentElement.style.setProperty('--mouse-x', `${event.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${event.clientY}px`);
+    };
+
+    updateScroll();
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    window.addEventListener('mousemove', updatePointer);
+
+    return () => {
+      revealTargets.forEach((el) => observer?.unobserve(el));
+      observer?.disconnect();
+      window.removeEventListener('scroll', updateScroll);
+      window.removeEventListener('mousemove', updatePointer);
+    };
+  }, []);
+
   return (
-    <div>
+    <div className="site-shell">
+      <div className="bg-orb orb-a" />
+      <div className="bg-orb orb-b" />
+      <div className="bg-grid" />
+      <div className="cursor-glow" />
       <NavigationBar 
-      navBarColor="darkblue"
+      navBarColor="var(--accent-700)"
       />
-      <ProfileAvatar />
-      <ProfileSection
-      primaryColor="darkblue" // Purple color for the cards
-      buttonColor="darkblue" // Dark purple for the button
-    />
-    <AlternateTimeline 
-    title="My Career Journey"
-    timelineItems={data}
-    />
-    <FullWidthTabs />
-    <Footer />
-      
-      
+      <main className="site-main">
+        <section id="home" className="page-section hero-section reveal-on-scroll">
+          <ProfileAvatar />
+        </section>
+
+        <section id="about" className="page-section reveal-on-scroll">
+          <ProfileSection
+            primaryColor="var(--accent-700)"
+            buttonColor="var(--accent-800)"
+          />
+        </section>
+
+        <section id="experience" className="page-section reveal-on-scroll">
+          <AlternateTimeline 
+            title="Professional Experience"
+            timelineItems={data}
+          />
+        </section>
+
+        <section id="projects" className="page-section reveal-on-scroll">
+          <FullWidthTabs />
+        </section>
+
+        <section id="contact" className="page-section reveal-on-scroll">
+          <Footer />
+        </section>
+      </main>
     </div>
       
   );

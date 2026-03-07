@@ -20,26 +20,28 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
   timelineItems,
 }) => {
   return (
-    <Box sx={{ py: 5, px: 2, textAlign: 'center' }}>
+    <Box sx={{ py: { xs: 5, md: 8 }, px: 2, textAlign: 'center', maxWidth: 1240, mx: 'auto' }}>
       {/* Dynamic Title */}
       <Typography
         variant="h2"
         sx={{
-          fontWeight: 700,
+          fontWeight: 800,
           mb: 4,
-          color: '#333',
+          color: 'var(--ink-900)',
           textTransform: 'uppercase',
+          fontSize: { xs: '2rem', md: '3rem' },
+          letterSpacing: '0.04em',
         }}
       >
         {title}
       </Typography>
 
       {/* Dynamic Timeline */}
-      <Timeline position="alternate">
+      <Timeline position="alternate" sx={{ '& .MuiTimelineItem-root:before': { flex: 0 } }}>
         {timelineItems.map((item, index) => (
           <TimelineItem key={index}>
             <TimelineSeparator>
-              <TimelineDot />
+              <TimelineDot sx={{ bgcolor: 'var(--accent-700)', boxShadow: '0 0 0 6px rgba(201,108,27,0.2)' }} />
               {index < timelineItems.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent>
@@ -50,6 +52,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 subsubtitle={item.employmentlocation}
                 description={item.employmentdate}
                 buttonText={item.buttonText}
+                highlights={item.highlights}
               />
             </div>
             </TimelineContent>

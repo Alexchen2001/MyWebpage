@@ -1,38 +1,130 @@
-.App {
-  text-align: center;
+.site-shell {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
+.site-main {
+  position: relative;
+  z-index: 3;
+}
+
+.cursor-glow {
+  position: fixed;
+  width: 26rem;
+  height: 26rem;
+  left: var(--mouse-x, 50vw);
+  top: var(--mouse-y, 50vh);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-radius: 50%;
+  z-index: 2;
+  background: radial-gradient(circle, rgba(8, 145, 178, 0.2) 0%, rgba(201, 108, 27, 0.1) 45%, transparent 72%);
+  filter: blur(16px);
+  transition: left 80ms linear, top 80ms linear;
+}
+
+.page-section {
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(26px) scale(0.985);
+  transition: opacity 620ms ease, transform 620ms ease;
+}
+
+.reveal-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.hero-section {
+  padding-top: 2.5rem;
+}
+
+.bg-orb {
+  position: fixed;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 50%;
+  filter: blur(48px);
+  opacity: 0.45;
+  z-index: 1;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+.orb-a {
+  background: #12b6c8;
+  left: -8rem;
+  top: -10rem;
+  transform: translate(
+    calc(var(--pointer-x, 0) * 16px),
+    calc(var(--scroll-y, 0px) * 0.03)
+  );
+  animation: driftA 14s ease-in-out infinite;
+}
+
+.orb-b {
+  background: #f97316;
+  right: -8rem;
+  top: 30%;
+  transform: translate(
+    calc(var(--pointer-x, 0) * -20px),
+    calc(var(--scroll-y, 0px) * -0.02)
+  );
+  animation: driftB 16s ease-in-out infinite;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(5, 14, 27, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(5, 14, 27, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at 50% 40%, black, transparent 78%);
+  transform: translateY(calc(var(--scroll-y, 0px) * -0.018));
+}
+
+@keyframes driftA {
+  0%,
+  100% {
+    opacity: 0.4;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.52;
+    scale: 1.06;
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@keyframes driftB {
+  0%,
+  100% {
+    opacity: 0.4;
+    scale: 1;
   }
-  to {
-    transform: rotate(360deg);
+  50% {
+    opacity: 0.5;
+    scale: 1.07;
+  }
+}
+
+@media (max-width: 768px) {
+  .cursor-glow {
+    display: none;
+  }
+
+  .bg-orb {
+    width: 20rem;
+    height: 20rem;
+  }
+
+  .hero-section {
+    padding-top: 1rem;
   }
 }

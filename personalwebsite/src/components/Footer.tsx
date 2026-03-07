@@ -8,13 +8,18 @@ const Footer: React.FC = () => {
       component="footer"
       sx={{
         width: '100%',
-        bgcolor: 'primary.main', // Use theme's primary color
-        color: 'white',
-        py: 2, // Padding top and bottom
-        mt: 5, // Margin top to separate from other content
-        textAlign: 'center', // Center align the text
-        position: 'relative',
-        bottom: 0,
+        maxWidth: 1240,
+        mx: 'auto',
+        mt: 3,
+        mb: 3,
+        color: '#eef4fb',
+        py: 3,
+        px: 2,
+        textAlign: 'center',
+        borderRadius: 3,
+        background: 'linear-gradient(120deg, #0f2137, #1b3f66)',
+        border: '1px solid rgba(255,255,255,0.14)',
+        boxShadow: '0 14px 30px rgba(10, 21, 36, 0.25)',
       }}
     >
       <Typography variant="body1">

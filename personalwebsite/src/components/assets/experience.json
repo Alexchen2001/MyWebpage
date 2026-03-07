@@ -1,30 +1,40 @@
 [
-    {
-      "jobname": "Comcast",
-      "exptype": "Work Experience",
-      "employmentlocation": "Philadelphia, PA",
-      "employmentdate": "June 2019 - Present",
-      "buttonText": "Learn More"
-    },
-    {
-      "jobname": "Amazon",
-      "exptype": "Internship",
-      "employmentlocation": "Seattle, WA",
-      "employmentdate": "June 2018 - August 2018",
-      "buttonText": "View Details"
-    },
-    {
-        "jobname": "Comcast",
-        "exptype": "Work Experience",
-        "employmentlocation": "Philadelphia, PA",
-        "employmentdate": "June 2019 - Present",
-        "buttonText": "Learn More"
-      },
-      {
-        "jobname": "Comcast",
-        "exptype": "Work Experience",
-        "employmentlocation": "Philadelphia, PA",
-        "employmentdate": "June 2019 - Present",
-        "buttonText": "Learn More"
-      }
-  ]
+  {
+    "jobname": "MyStage Music - Backend Software Engineer",
+    "exptype": "Experience",
+    "employmentlocation": "Remote (Wisconsin-based)",
+    "employmentdate": "April 2025 - Present",
+    "buttonText": "Web3 Platform + Festival Scale",
+    "highlights": [
+      "Sole backend engineer owning Firebase database design and API implementation/maintenance.",
+      "Designed concert NFT distribution using Google Maps/Geolocation APIs with proximity and venue rules.",
+      "Built sync flows between app data and blockchain records, including end-user eligibility checks.",
+      "Supported rollout planning for a 300,000-attendee festival event."
+    ]
+  },
+  {
+    "jobname": "Future Arts - Software Engineer",
+    "exptype": "Experience",
+    "employmentlocation": "Seattle, WA",
+    "employmentdate": "September 2023 - June 2024",
+    "buttonText": "AWS Serverless + NLP Pipeline",
+    "highlights": [
+      "Built scraping/data processing platform using Lambda, S3, API Gateway, EventBridge, Step Functions, Python, and spaCy.",
+      "Implemented end-to-end ingestion and normalization for multi-source artist data.",
+      "Raised data accuracy to 80-90%, reduced manual entry by ~80%, and lowered infra cost by ~70%.",
+      "Integrated Airtable as system of record and exposed APIs for downstream tools."
+    ]
+  },
+  {
+    "jobname": "Bilimetrix USA - Software Engineer Intern",
+    "exptype": "Experience",
+    "employmentlocation": "Seattle, WA",
+    "employmentdate": "June 2023 - August 2023",
+    "buttonText": "C# .NET Medical Imaging",
+    "highlights": [
+      "Contributed to a Razor Pages app and implemented image checks for rotation, color balance, and brightness.",
+      "Built dynamic UI components and improved accessibility/cross-browser behavior.",
+      "Helped redesign data models and refactor tests; reached 100% unit test coverage and reduced page load time by 30%."
+    ]
+  }
+]

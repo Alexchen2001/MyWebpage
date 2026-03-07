@@ -15,7 +15,7 @@ interface NavigationBarProps {
   navBarColor: string; // Pass-in parameter for navbar background color
 }
 
-const pages = ['Home', 'Link 1', 'Link 2', 'Link 3'];
+const pages = ['Home', 'About', 'Experience', 'Projects', 'Contact'];
 
 const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -29,7 +29,15 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: navBarColor, boxShadow: 3 }}>
+    <AppBar
+      position="sticky"
+      sx={{
+        background: `linear-gradient(120deg, rgba(6, 19, 34, 0.78), ${navBarColor})`,
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '0 10px 30px rgba(9, 17, 28, 0.22)',
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'center' }}>
           {/* Mobile Menu */}
@@ -61,8 +69,10 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page} component="a" href={`#${page.toLowerCase()}`} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center" fontWeight={700}>
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -73,9 +83,24 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor }) => {
             {pages.map((page) => (
               <Button
                 key={page}
-                href={`#${page.toLowerCase().replace(/\s+/g, '')}`}
+                href={`#${page.toLowerCase()}`}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block', mx: 2 }}
+                sx={{
+                  my: 2,
+                  color: '#f8fafc',
+                  display: 'block',
+                  mx: 1.5,
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                  borderRadius: 999,
+                  px: 2.2,
+                  transition: 'all 220ms ease',
+                  '&:hover': {
+                    backgroundColor: 'rgba(8, 145, 178, 0.2)',
+                    transform: 'translateY(-1px)',
+                  },
+                }}
               >
                 {page}
               </Button>

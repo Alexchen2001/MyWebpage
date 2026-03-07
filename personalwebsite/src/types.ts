@@ -4,6 +4,7 @@ export interface CardData{
     employmentlocation: string;
     employmentdate: string;
     buttonText: string;
+    highlights?: string[];
   }
 
 
