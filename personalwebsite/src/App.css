@@ -15,7 +15,6 @@
   justify-content: center;
   overflow: hidden;
   background: radial-gradient(circle at 50% 45%, #1a2c57 0%, #050916 52%, #02040b 100%);
-  transition: opacity 700ms ease, visibility 700ms ease;
 }
 
 .intro-visible {
@@ -49,7 +48,6 @@
     radial-gradient(1px 1px at 80% 25%, rgba(255, 255, 255, 0.88), transparent),
     radial-gradient(1px 1px at 35% 75%, rgba(167, 219, 255, 0.82), transparent);
   background-size: 360px 220px;
-  animation: starWarp 3s ease forwards;
 }
 
 .intro-ring {
@@ -58,7 +56,6 @@
   border-radius: 999px;
   border: 2px solid rgba(123, 176, 255, 0.55);
   box-shadow: 0 0 70px rgba(99, 140, 255, 0.42);
-  animation: pulseIn 1.8s ease-in-out infinite;
 }
 
 .intro-title {
@@ -70,7 +67,6 @@
   color: #f1f6ff;
   font-size: clamp(1.4rem, 3.6vw, 2.8rem);
   text-shadow: 0 4px 24px rgba(89, 143, 255, 0.52);
-  animation: introText 4.2s ease forwards;
 }
 
 .intro-subtitle {
@@ -84,7 +80,6 @@
   transform: translateY(56px);
   letter-spacing: 0.02em;
   text-shadow: 0 2px 18px rgba(89, 143, 255, 0.44);
-  animation: introSubText 3.2s ease 1.5s forwards;
 }
 
 .bg-stars {
@@ -98,9 +93,7 @@
     radial-gradient(1.5px 1.5px at 230px 170px, rgba(255, 255, 255, 0.85), transparent),
     radial-gradient(1px 1px at 340px 120px, rgba(170, 190, 255, 0.72), transparent);
   background-size: 380px 220px;
-  animation: twinkle 10s ease-in-out infinite alternate;
   opacity: var(--stars-opacity);
-  transition: opacity 320ms ease;
 }
 
 .site-main {
@@ -127,7 +120,6 @@
   z-index: 2;
   background: radial-gradient(circle, rgba(129, 140, 248, 0.24) 0%, rgba(34, 211, 238, 0.16) 42%, rgba(251, 113, 133, 0.12) 62%, transparent 78%);
   filter: blur(20px);
-  transition: left 80ms linear, top 80ms linear;
 }
 
 .page-section {
@@ -144,7 +136,6 @@
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(26px) scale(0.985);
-  transition: opacity 620ms ease, transform 620ms ease;
 }
 
 .reveal-on-scroll.in-view {
@@ -175,7 +166,6 @@
     calc(var(--pointer-x, 0) * 16px),
     calc(var(--scroll-y, 0px) * 0.03)
   );
-  animation: driftA 14s ease-in-out infinite;
 }
 
 .orb-b {
@@ -186,7 +176,6 @@
     calc(var(--pointer-x, 0) * -20px),
     calc(var(--scroll-y, 0px) * -0.02)
   );
-  animation: driftB 16s ease-in-out infinite;
 }
 
 .bg-grid {
@@ -200,94 +189,6 @@
   background-size: 44px 44px;
   mask-image: radial-gradient(circle at 52% 42%, black, transparent 76%);
   transform: translateY(calc(var(--scroll-y, 0px) * -0.018));
-}
-
-@keyframes twinkle {
-  from {
-    opacity: 0.55;
-  }
-  to {
-    opacity: 0.9;
-  }
-}
-
-@keyframes starWarp {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  100% {
-    transform: scale(1.55);
-    opacity: 1;
-  }
-}
-
-@keyframes pulseIn {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 0.9;
-  }
-}
-
-@keyframes introText {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  35%,
-  70% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0.1;
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes introSubText {
-  0% {
-    opacity: 0;
-    transform: translateY(64px);
-  }
-  30%,
-  85% {
-    opacity: 1;
-    transform: translateY(56px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(48px);
-  }
-}
-
-@keyframes driftA {
-  0%,
-  100% {
-    opacity: 0.4;
-    scale: 1;
-  }
-  50% {
-    opacity: 0.52;
-    scale: 1.06;
-  }
-}
-
-@keyframes driftB {
-  0%,
-  100% {
-    opacity: 0.4;
-    scale: 1;
-  }
-  50% {
-    opacity: 0.5;
-    scale: 1.07;
-  }
 }
 
 @media (max-width: 768px) {

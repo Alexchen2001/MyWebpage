@@ -91,7 +91,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                       borderRadius: 3.2,
                       boxShadow: '0 18px 34px rgba(5, 14, 27, 0.2)',
                       minHeight: { xs: 120, sm: `${Math.round(170 * stat.level)}px` },
-                      transition: 'transform 260ms ease',
                       '&:hover': {
                         transform: 'translateY(-6px)',
                       },
@@ -182,7 +181,6 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 fontWeight: 700,
                 textTransform: 'none',
                 boxShadow: '0 16px 30px rgba(180, 83, 9, 0.35)',
-                transition: 'transform 220ms ease',
                 '&:hover': {
                   transform: 'translateY(-3px)',
                 },

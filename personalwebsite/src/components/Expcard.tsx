@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
+import { useGsapTilt } from '../hooks/useGsapTilt';
 
 interface OutlinedCardProps {
   title: string; // Title of the card
@@ -21,27 +22,8 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
   buttonText,
   highlights,
 }) => {
-  const handleTilt = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.currentTarget;
-    const rect = target.getBoundingClientRect();
-    const px = ((event.clientX - rect.left) / rect.width) * 100;
-    const py = ((event.clientY - rect.top) / rect.height) * 100;
-    const rotateY = ((px - 50) / 50) * 6;
-    const rotateX = ((50 - py) / 50) * 6;
-
-    target.style.setProperty('--tilt-x', `${rotateX.toFixed(2)}deg`);
-    target.style.setProperty('--tilt-y', `${rotateY.toFixed(2)}deg`);
-    target.style.setProperty('--px', `${px.toFixed(1)}%`);
-    target.style.setProperty('--py', `${py.toFixed(1)}%`);
-  };
-
-  const resetTilt = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.currentTarget;
-    target.style.setProperty('--tilt-x', '0deg');
-    target.style.setProperty('--tilt-y', '0deg');
-    target.style.setProperty('--px', '50%');
-    target.style.setProperty('--py', '50%');
-  };
+  const cardRef = React.useRef<HTMLDivElement | null>(null);
+  const tilt = useGsapTilt(cardRef, { rotate: 6, lift: 4 });
 
   return (
     <Box sx={{
@@ -51,9 +33,10 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
       py: 1,
     }}>
       <Card
+        ref={cardRef}
         variant="outlined"
-        onMouseMove={handleTilt}
-        onMouseLeave={resetTilt}
+        onMouseMove={tilt.onMouseMove}
+        onMouseLeave={tilt.onMouseLeave}
         sx={{
           width: '100%',
           position: 'relative',
@@ -62,12 +45,8 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
           borderColor: 'rgba(99, 102, 241, 0.18)',
           background: 'var(--panel-bg)',
           boxShadow: '0 18px 40px rgba(1, 4, 12, 0.5)',
-          transform:
-            'perspective(860px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0)',
-          transition: 'transform 240ms ease, box-shadow 240ms ease',
+          transformStyle: 'preserve-3d',
           '&:hover': {
-            transform:
-              'perspective(860px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-4px)',
             boxShadow: '0 24px 52px rgba(15, 33, 55, 0.18)',
           },
           '&::before': {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import './App.css';
 import NavigationBar from './components/Navbar';
 import ProfileAvatar from './components/Profilepic';
@@ -22,19 +22,15 @@ function App() {
     section?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  useEffect(() => {
-    const introTimer = window.setTimeout(() => {
-      setShowIntro(false);
-    }, 5200);
-
-    return () => window.clearTimeout(introTimer);
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
   }, []);
 
   usePageEffects({ mainRef, themeMode });
 
   return (
     <div className={`site-shell ${showIntro ? 'intro-active' : ''}`}>
-      <IntroOverlay visible={showIntro} />
+      <IntroOverlay visible={showIntro} onComplete={handleIntroComplete} />
       <div className="bg-stars" />
       <div className="bg-orb orb-a" />
       <div className="bg-orb orb-b" />

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import gsap from 'gsap';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -19,6 +20,238 @@ interface AlternateTimelineProps {
   themeMode: 'light' | 'dark';
 }
 
+interface ExperienceWarpCanvasProps {
+  active: boolean;
+  direction: 'entering' | 'leaving';
+  isDark: boolean;
+}
+
+interface WarpParticle {
+  angle: number;
+  radius: number;
+  depth: number;
+  size: number;
+  hue: number;
+  saturation: number;
+  lane: number;
+  arm: number;
+  planet: boolean;
+}
+
+const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, direction, isDark }) => {
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const reduceMotion = React.useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
+    []
+  );
+
+  React.useLayoutEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!active || !canvas || !ctx || reduceMotion) {
+      return undefined;
+    }
+
+    const state = {
+      progress: direction === 'entering' ? 0 : 1,
+      bloom: direction === 'entering' ? 0 : 1,
+      spin: 0,
+      tunnel: direction === 'entering' ? 0 : 1,
+      flash: 0,
+      collapse: direction === 'entering' ? 0 : 1,
+      expansion: direction === 'entering' ? 0 : 1,
+    };
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let particles: WarpParticle[] = [];
+
+    const createParticles = () => {
+      const count = window.innerWidth < 720 ? 190 : 360;
+      const armCount = 5;
+      const galaxyPalette = isDark ? [198, 220, 248, 274, 302, 326, 38] : [184, 204, 226, 262, 292, 318, 42];
+      particles = Array.from({ length: count }, () => ({
+        angle: (Math.floor(Math.random() * armCount) / armCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.46,
+        radius: 18 + Math.pow(Math.random(), 0.72) * 500,
+        depth: 0.28 + Math.random() * 1.9,
+        size: 0.65 + Math.random() * 3.5,
+        hue: galaxyPalette[Math.floor(Math.random() * galaxyPalette.length)] + Math.random() * 18 - 9,
+        saturation: 84 + Math.random() * 16,
+        lane: Math.random(),
+        arm: Math.floor(Math.random() * armCount),
+        planet: Math.random() > 0.9,
+      }));
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = Math.max(1, rect.width);
+      height = Math.max(1, rect.height);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      createParticles();
+    };
+
+    const render = () => {
+      const cx = width / 2;
+      const cy = height / 2;
+      const aspect = width / Math.max(height, 1);
+      const progress = gsap.utils.clamp(0, 1, state.progress);
+      const collapse = gsap.utils.clamp(0, 1, state.collapse);
+      const expansion = gsap.utils.clamp(0, 1, state.expansion);
+      const burst = gsap.parseEase('power4.out')(expansion);
+      const pull = gsap.parseEase('power3.inOut')(collapse);
+      const singularityRadius = Math.max(width, height) * (0.035 + state.tunnel * 0.16);
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.globalCompositeOperation = 'lighter';
+
+      const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(width, height) * 0.68);
+      bloom.addColorStop(0, isDark ? `rgba(244, 250, 255, ${0.28 + state.bloom * 0.42})` : `rgba(255, 255, 255, ${0.32 + state.bloom * 0.38})`);
+      bloom.addColorStop(0.18, isDark ? `rgba(67, 214, 255, ${0.18 + state.bloom * 0.2})` : `rgba(34, 211, 238, ${0.18 + state.bloom * 0.18})`);
+      bloom.addColorStop(0.42, isDark ? 'rgba(126, 87, 255, 0.2)' : 'rgba(14, 165, 164, 0.18)');
+      bloom.addColorStop(0.68, isDark ? 'rgba(255, 56, 171, 0.12)' : 'rgba(99, 102, 241, 0.1)');
+      bloom.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = bloom;
+      ctx.fillRect(0, 0, width, height);
+
+      const singularity = ctx.createRadialGradient(cx, cy, 0, cx, cy, singularityRadius * (1.5 + state.flash * 2.6));
+      singularity.addColorStop(0, `rgba(255, 255, 255, ${0.58 + state.flash * 0.36})`);
+      singularity.addColorStop(0.22, isDark ? `rgba(125, 211, 252, ${0.32 + state.bloom * 0.22})` : `rgba(236, 254, 255, ${0.34 + state.bloom * 0.18})`);
+      singularity.addColorStop(0.48, isDark ? 'rgba(168, 85, 247, 0.26)' : 'rgba(59, 130, 246, 0.18)');
+      singularity.addColorStop(0.74, isDark ? 'rgba(255, 56, 171, 0.18)' : 'rgba(14, 165, 164, 0.14)');
+      singularity.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = singularity;
+      ctx.beginPath();
+      ctx.arc(cx, cy, singularityRadius * (1.8 + state.flash * 2.8), 0, Math.PI * 2);
+      ctx.fill();
+
+      for (let ring = 0; ring < 5; ring += 1) {
+        const ringProgress = (progress * 1.55 + ring * 0.18) % 1;
+        const radius = singularityRadius * (1.3 + ringProgress * (4.8 + burst * 4.2));
+        ctx.strokeStyle = isDark
+          ? `rgba(${ring % 2 ? '255, 56, 171' : '125, 211, 252'}, ${0.2 * (1 - ringProgress) * (0.55 + state.bloom)})`
+          : `rgba(${ring % 2 ? '99, 102, 241' : '14, 165, 164'}, ${0.18 * (1 - ringProgress) * (0.55 + state.bloom)})`;
+        ctx.lineWidth = 1.2 + ringProgress * 7;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, radius * aspect * (1.25 + burst * 0.55), radius * (0.64 + burst * 0.42), state.spin * 0.62 + ring * 0.28, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      particles.forEach((particle) => {
+        const spiralCurl = particle.radius * 0.014;
+        const orbit = state.spin * (0.42 + particle.depth * 0.2) + spiralCurl + particle.lane * 0.42;
+        const armWave = Math.sin(particle.radius * 0.018 + progress * Math.PI * 2 + particle.arm) * 18;
+        const galaxyRadius = particle.radius * (1.04 - pull * 0.72 + burst * (0.65 + particle.depth * 0.5)) + armWave;
+        const angle = particle.angle + orbit + pull * 1.85 - burst * 0.28;
+        const verticalFlatten = 0.46 + particle.lane * 0.2 + burst * 0.18;
+        const x = cx + Math.cos(angle) * galaxyRadius * aspect;
+        const y = cy + Math.sin(angle) * galaxyRadius * verticalFlatten;
+        const trailAngle = angle - (0.18 + pull * 0.8 + burst * 0.22) * (particle.depth + 0.4);
+        const trailRadius = Math.max(6, galaxyRadius * (1 - 0.08 - pull * 0.2));
+        const tx = cx + Math.cos(trailAngle) * trailRadius * aspect;
+        const ty = cy + Math.sin(trailAngle) * trailRadius * verticalFlatten;
+        const alphaWindow = Math.max(0, Math.min(1, 0.42 + progress * 1.2));
+        const alpha = alphaWindow * (0.3 + particle.depth * 0.26) * (0.75 + state.bloom * 0.44);
+
+        const gradient = ctx.createLinearGradient(tx, ty, x, y);
+        gradient.addColorStop(0, `hsla(${particle.hue}, ${particle.saturation}%, 70%, 0)`);
+        gradient.addColorStop(0.38, `hsla(${particle.hue}, ${particle.saturation}%, 64%, ${alpha * 0.56})`);
+        gradient.addColorStop(0.72, `hsla(${particle.hue + 24}, 100%, 76%, ${alpha * 0.86})`);
+        gradient.addColorStop(1, `hsla(${particle.hue + 48}, 100%, 94%, ${alpha})`);
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = particle.size * (0.65 + pull * 1.15 + burst * 1.9);
+        ctx.beginPath();
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        if (particle.planet || (particle.depth > 1.55 && progress > 0.35)) {
+          const planetSize = particle.size * (particle.planet ? 3.4 : 1.9) * (0.8 + burst * 0.75);
+          const planetGlow = ctx.createRadialGradient(x, y, 0, x, y, planetSize * 4);
+          planetGlow.addColorStop(0, `hsla(${particle.hue + 30}, 100%, 88%, ${alpha * 0.7})`);
+          planetGlow.addColorStop(0.36, `hsla(${particle.hue}, 95%, 62%, ${alpha * 0.28})`);
+          planetGlow.addColorStop(1, `hsla(${particle.hue}, 95%, 62%, 0)`);
+          ctx.fillStyle = planetGlow;
+          ctx.beginPath();
+          ctx.arc(x, y, planetSize * 4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = `hsla(${particle.hue + 36}, 100%, 86%, ${alpha * 0.82})`;
+          ctx.beginPath();
+          ctx.arc(x, y, planetSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = `rgba(255, 255, 255, ${state.flash * 0.16})`;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.globalCompositeOperation = 'source-over';
+    };
+
+    resize();
+    const timeline = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+    timeline.to(state, {
+      progress: direction === 'entering' ? 1 : 0,
+      bloom: direction === 'entering' ? 1 : 0.15,
+      tunnel: direction === 'entering' ? 1 : 0.15,
+      collapse: direction === 'entering' ? 1 : 0.1,
+      expansion: direction === 'entering' ? 1 : 0,
+      spin: direction === 'entering' ? 2.75 : -0.9,
+      duration: direction === 'entering' ? 1.65 : 1.05,
+    });
+    timeline
+      .to(state, { flash: 1, duration: 0.18, ease: 'power2.out' }, direction === 'entering' ? 0.82 : 0.42)
+      .to(state, { flash: 0, duration: 0.38, ease: 'power2.in' }, direction === 'entering' ? 1 : 0.56);
+
+    gsap.set(canvas, { autoAlpha: 0 });
+    gsap.to(canvas, {
+      autoAlpha: direction === 'entering' ? 1 : 0.86,
+      duration: 0.18,
+      ease: 'power2.out',
+    });
+    gsap.to(canvas, {
+      autoAlpha: 0,
+      delay: direction === 'entering' ? 1.24 : 0.78,
+      duration: 0.34,
+      ease: 'power2.in',
+    });
+
+    gsap.ticker.add(render);
+    window.addEventListener('resize', resize);
+
+    return () => {
+      timeline.kill();
+      gsap.killTweensOf(canvas);
+      gsap.ticker.remove(render);
+      window.removeEventListener('resize', resize);
+    };
+  }, [active, direction, isDark, reduceMotion]);
+
+  if (!active || reduceMotion) {
+    return null;
+  }
+
+  return (
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        display: 'block',
+        pointerEvents: 'none',
+      }}
+    />
+  );
+};
+
 const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
   title,
   timelineItems,
@@ -32,7 +265,9 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
   const [activeTrack, setActiveTrack] = React.useState<ExperienceTrack | null>(null);
   const [viewState, setViewState] = React.useState<'bubbles' | 'entering' | 'timeline' | 'leaving'>('bubbles');
   const [clickedTrack, setClickedTrack] = React.useState<ExperienceTrack | null>(null);
-  const transitionTimerRef = React.useRef<number | null>(null);
+  const transitionTimerRef = React.useRef<gsap.core.Animation | null>(null);
+  const stageRef = React.useRef<HTMLDivElement | null>(null);
+  const timelineRef = React.useRef<HTMLDivElement | null>(null);
   const isTransitioning = viewState === 'entering' || viewState === 'leaving';
 
   const normalizeTrack = (track: string | undefined): ExperienceTrack => {
@@ -63,16 +298,14 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
       return;
     }
 
-    if (transitionTimerRef.current) {
-      window.clearTimeout(transitionTimerRef.current);
-    }
+    transitionTimerRef.current?.kill();
 
     setClickedTrack(track);
     setActiveTrack(track);
     setViewState('entering');
-    transitionTimerRef.current = window.setTimeout(() => {
+    transitionTimerRef.current = gsap.delayedCall(isDark ? 1.55 : 1.2, () => {
       setViewState('timeline');
-    }, isDark ? 5000 : 2100);
+    });
   };
 
   const handleBackToBubbles = () => {
@@ -80,30 +313,166 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
       return;
     }
 
-    if (transitionTimerRef.current) {
-      window.clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current?.kill();
+
+    const timelineEl = timelineRef.current;
+    const cards = timelineEl?.querySelectorAll('.experience-card-pop');
+
+    const startGalaxyReturn = () => {
+      setViewState('leaving');
+      transitionTimerRef.current = gsap.delayedCall(isDark ? 1.2 : 0.95, () => {
+        setActiveTrack(null);
+        setClickedTrack(null);
+        setViewState('bubbles');
+      });
+    };
+
+    if (!timelineEl || !cards?.length) {
+      startGalaxyReturn();
+      return;
     }
 
-    setViewState('leaving');
-    transitionTimerRef.current = window.setTimeout(() => {
-      setActiveTrack(null);
-      setClickedTrack(null);
-      setViewState('bubbles');
-    }, isDark ? 5000 : 1800);
+    transitionTimerRef.current = gsap
+      .timeline({ onComplete: startGalaxyReturn })
+      .to(cards, {
+        autoAlpha: 0,
+        y: -30,
+        scale: 0.94,
+        filter: 'blur(8px)',
+        duration: 0.58,
+        stagger: {
+          each: 0.11,
+          from: 'end',
+        },
+        ease: 'power3.in',
+      })
+      .to(
+        timelineEl,
+        {
+          autoAlpha: 0,
+          y: -18,
+          filter: 'blur(6px)',
+          duration: 0.36,
+          ease: 'power2.in',
+        },
+        '-=0.12'
+      );
   };
 
   React.useEffect(() => {
     return () => {
-      if (transitionTimerRef.current) {
-        window.clearTimeout(transitionTimerRef.current);
-      }
+      transitionTimerRef.current?.kill();
     };
   }, []);
+
+  React.useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (viewState === 'bubbles') {
+        gsap.fromTo(
+          '.track-bubble',
+          { autoAlpha: 0, y: 22, scale: 0.94 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.65, stagger: 0.08, ease: 'back.out(1.45)' }
+        );
+        gsap.to('.track-bubble', {
+          y: -12,
+          duration: 3.8,
+          repeat: -1,
+          yoyo: true,
+          stagger: 0.18,
+          ease: 'sine.inOut',
+        });
+      }
+
+      if (viewState === 'entering') {
+        gsap.to('.track-bubble', {
+          autoAlpha: 0,
+          scale: 0.72,
+          duration: 0.45,
+          stagger: 0.04,
+          ease: 'power2.in',
+        });
+      }
+    }, stageRef);
+
+    return () => ctx.revert();
+  }, [viewState]);
+
+  React.useLayoutEffect(() => {
+    const target = timelineRef.current;
+    if (!target || viewState !== 'timeline') {
+      return undefined;
+    }
+
+    const animation = gsap.timeline();
+    animation
+      .fromTo(
+        target,
+        { autoAlpha: 0, y: 26, scale: 0.98, filter: 'blur(8px)' },
+        { autoAlpha: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.72, ease: 'power3.out' }
+      )
+      .fromTo(
+        target.querySelectorAll('.experience-card-pop'),
+        { autoAlpha: 0, y: 42, scale: 0.92, filter: 'blur(8px)' },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.95,
+          stagger: 0.18,
+          ease: 'back.out(1.35)',
+        },
+        0.18
+      );
+
+    return () => animation.kill();
+  }, [viewState, activeTrack]);
+
+  React.useLayoutEffect(() => {
+    if (!isTransitioning) {
+      return undefined;
+    }
+
+    const ctx = gsap.context(() => {
+      const entering = viewState === 'entering';
+
+      gsap.fromTo(
+        '.experience-transition-layer',
+        {
+          autoAlpha: entering ? 0 : 0.9,
+          scale: entering ? 0.55 : 1.35,
+          filter: entering ? 'blur(3px)' : 'blur(0px)',
+        },
+        {
+          autoAlpha: entering ? 0.95 : 0,
+          scale: entering ? 1.65 : 0.72,
+          filter: entering ? 'blur(0px)' : 'blur(5px)',
+          duration: entering ? 1.15 : 0.78,
+          stagger: 0.035,
+          ease: entering ? 'power3.out' : 'power2.inOut',
+        }
+      );
+
+      gsap.fromTo(
+        '.experience-transition-streak',
+        { autoAlpha: entering ? 0 : 0.72, scaleX: entering ? 0.22 : 1.8 },
+        {
+          autoAlpha: entering ? 0.72 : 0,
+          scaleX: entering ? 1.8 : 0.4,
+          duration: entering ? 1.1 : 0.72,
+          ease: 'power3.inOut',
+        }
+      );
+    }, stageRef);
+
+    return () => ctx.revert();
+  }, [isTransitioning, viewState]);
 
   return (
     <Box sx={{ py: { xs: 4, md: 7 }, px: 2, textAlign: 'center', maxWidth: 1100, mx: 'auto' }}>
       {isTransitioning && (
         <Box
+          className="experience-transition-layer"
           sx={{
             position: 'fixed',
             inset: 0,
@@ -114,31 +483,11 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               ? 'radial-gradient(circle at 50% 52%, rgba(185, 219, 255, 0.2), rgba(23, 46, 92, 0.7) 33%, rgba(3, 6, 14, 0.95) 72%)'
               : 'radial-gradient(circle at 50% 54%, rgba(220, 249, 255, 0.85), rgba(151, 226, 244, 0.68) 35%, rgba(80, 170, 202, 0.35) 72%)',
             mixBlendMode: 'screen',
-            '@keyframes fullWarpIn': {
-              '0%': { opacity: 0, transform: 'scale(0.35)', filter: 'blur(2px)' },
-              '40%': { opacity: 0.9, transform: 'scale(1.1)', filter: 'blur(0.4px)' },
-              '100%': { opacity: 1, transform: 'scale(1.9)', filter: 'blur(0px)' },
-            },
-            '@keyframes fullWarpOut': {
-              '0%': { opacity: 1, transform: 'scale(1.4)' },
-              '100%': { opacity: 0, transform: 'scale(0.65)' },
-            },
-            '@keyframes fullStreaks': {
-              '0%': { opacity: 0, transform: 'translateY(35%) scaleY(0.35)' },
-              '25%': { opacity: 0.75 },
-              '100%': { opacity: 1, transform: 'translateY(-30%) scaleY(1.7)' },
-            },
-            '@keyframes fullAnamorphic': {
-              '0%': { opacity: 0, transform: 'translate(-50%, -50%) scaleX(0.2)' },
-              '40%': { opacity: 0.8, transform: 'translate(-50%, -50%) scaleX(1)' },
-              '100%': { opacity: 0.45, transform: 'translate(-50%, -50%) scaleX(2.1)' },
-            },
-            animation: viewState === 'entering'
-              ? (isDark ? 'fullWarpIn 5s cubic-bezier(0.17, 0.82, 0.31, 1) forwards' : 'fullWarpIn 2.1s ease forwards')
-              : (isDark ? 'fullWarpIn 5s cubic-bezier(0.17, 0.82, 0.31, 1) reverse both' : 'fullWarpOut 1.8s ease forwards'),
           }}
         >
+          <ExperienceWarpCanvas active={isTransitioning} direction={viewState === 'leaving' ? 'leaving' : 'entering'} isDark={isDark} />
           <Box
+            className="experience-transition-layer"
             sx={{
               position: 'absolute',
               inset: 0,
@@ -146,12 +495,10 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 ? 'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.065) 5.2% 5.6%, transparent 5.8% 11%)'
                 : 'repeating-linear-gradient(90deg, transparent 0 6%, rgba(231, 253, 255, 0.14) 6.2% 6.6%, transparent 6.8% 12%)',
               filter: 'blur(0.5px)',
-              animation: viewState === 'entering'
-                ? (isDark ? 'fullStreaks 5s cubic-bezier(0.2, 0.76, 0.28, 1) forwards' : 'fullStreaks 2.1s ease forwards')
-                : (isDark ? 'fullStreaks 5s cubic-bezier(0.2, 0.76, 0.28, 1) reverse both' : 'none'),
             }}
           />
           <Box
+            className="experience-transition-streak"
             sx={{
               position: 'absolute',
               left: '50%',
@@ -166,9 +513,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               boxShadow: isDark
                 ? '0 0 18px rgba(126, 186, 255, 0.95), 0 0 42px rgba(95, 162, 255, 0.66)'
                 : '0 0 18px rgba(141, 228, 255, 0.88), 0 0 42px rgba(115, 214, 240, 0.52)',
-              animation: viewState === 'entering'
-                ? (isDark ? 'fullAnamorphic 5s cubic-bezier(0.2, 0.78, 0.32, 1) forwards' : 'fullAnamorphic 2.1s ease forwards')
-                : (isDark ? 'fullAnamorphic 5s cubic-bezier(0.2, 0.78, 0.32, 1) reverse both' : 'none'),
             }}
           />
         </Box>
@@ -189,6 +533,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
       </Typography>
 
       <Box
+        ref={stageRef}
         sx={{
           position: 'relative',
           minHeight: { xs: 420, md: 500 },
@@ -201,80 +546,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
           boxShadow: 'none',
           display: 'grid',
           placeItems: 'center',
-          '@keyframes bubbleFloat': {
-            '0%, 100%': { transform: 'translateY(0px) scale(1)' },
-            '50%': { transform: 'translateY(-14px) scale(1.03)' },
-          },
-          '@keyframes planetFloat': {
-            '0%, 100%': { transform: 'translateY(0px) scale(1) rotate(0deg)' },
-            '50%': { transform: 'translateY(-10px) scale(1.02) rotate(2.5deg)' },
-          },
-          '@keyframes planetCollapse': {
-            '0%': { opacity: 1, transform: 'scale(1)' },
-            '45%': { opacity: 1, transform: 'scale(0.7)' },
-            '75%': { opacity: 0.85, transform: 'scale(0.35)' },
-            '100%': { opacity: 0, transform: 'scale(0.08)' },
-          },
-          '@keyframes bubbleBurst': {
-            '0%': { opacity: 1, transform: 'scale(1)' },
-            '65%': { opacity: 1, transform: 'scale(1.28)' },
-            '100%': { opacity: 0, transform: 'scale(0.2)' },
-          },
-          '@keyframes bubbleFadeAway': {
-            '0%': { opacity: 1, transform: 'scale(1)' },
-            '100%': { opacity: 0, transform: 'scale(0.7)' },
-          },
-          '@keyframes warpTunnelIn': {
-            '0%': { opacity: 0, transform: 'scale(0.5)' },
-            '100%': { opacity: 1, transform: 'scale(1.6)' },
-          },
-          '@keyframes warpTunnelOut': {
-            '0%': { opacity: 0, transform: 'scale(1.6)' },
-            '100%': { opacity: 1, transform: 'scale(0.55)' },
-          },
-          '@keyframes lightyearTunnel': {
-            '0%': { opacity: 0, transform: 'scale(0.45)', filter: 'blur(2px) brightness(1)' },
-            '40%': { opacity: 0.95, transform: 'scale(1.2)', filter: 'blur(0px) brightness(1.3)' },
-            '100%': { opacity: 0.92, transform: 'scale(1.75)', filter: 'blur(0px) brightness(1.55)' },
-          },
-          '@keyframes lightyearStreak': {
-            '0%': { transform: 'translateY(30%) scaleY(0.3)', opacity: 0 },
-            '25%': { opacity: 0.55 },
-            '100%': { transform: 'translateY(-35%) scaleY(1.5)', opacity: 0.95 },
-          },
-          '@keyframes anamorphicBlueStreak': {
-            '0%': { opacity: 0, transform: 'scaleX(0.3) translateY(0px)' },
-            '30%': { opacity: 0.75, transform: 'scaleX(1.15) translateY(-2px)' },
-            '100%': { opacity: 0.55, transform: 'scaleX(1.75) translateY(0px)' },
-          },
-          '@keyframes lensGhostOrbit': {
-            '0%': { opacity: 0, transform: 'translate(-50%, -50%) scale(0.4) rotate(0deg)' },
-            '45%': { opacity: 0.6, transform: 'translate(-50%, -50%) scale(1.05) rotate(18deg)' },
-            '100%': { opacity: 0.4, transform: 'translate(-50%, -50%) scale(1.45) rotate(42deg)' },
-          },
-          '@keyframes halationBloom': {
-            '0%': { opacity: 0, filter: 'blur(2px) saturate(1)' },
-            '50%': { opacity: 0.48, filter: 'blur(6px) saturate(1.12)' },
-            '100%': { opacity: 0.36, filter: 'blur(11px) saturate(1.2)' },
-          },
-          '@keyframes starburstEight': {
-            '0%': { opacity: 0, transform: 'translate(-50%, -50%) scale(0.4) rotate(0deg)' },
-            '55%': { opacity: 0.52, transform: 'translate(-50%, -50%) scale(1) rotate(6deg)' },
-            '100%': { opacity: 0.22, transform: 'translate(-50%, -50%) scale(1.25) rotate(12deg)' },
-          },
-          '@keyframes volumetricSweep': {
-            '0%': { opacity: 0, transform: 'translateY(28%) scaleY(0.45)' },
-            '30%': { opacity: 0.42 },
-            '100%': { opacity: 0.18, transform: 'translateY(-18%) scaleY(1.4)' },
-          },
-          '@keyframes timelineIn': {
-            '0%': { opacity: 0, transform: 'translateY(18px) scale(0.94)', filter: 'blur(6px)' },
-            '100%': { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
-          },
-          '@keyframes timelineOut': {
-            '0%': { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0px)' },
-            '100%': { opacity: 0, transform: 'translateY(-14px) scale(1.06)', filter: 'blur(5px)' },
-          },
         }}
       >
         {(viewState === 'bubbles' || viewState === 'entering') && (
@@ -291,10 +562,10 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
           >
             {tracks.map((track) => {
               const layout = bubbleLayout[track];
-              const isClicked = clickedTrack === track;
               return (
                 <Box
                   key={track}
+                  className="track-bubble"
                   component="button"
                   onClick={() => handleTrackClick(track)}
                   sx={{
@@ -319,17 +590,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
-                  animation:
-                    viewState === 'entering'
-                      ? isClicked
-                        ? isDark
-                          ? 'planetCollapse 1200ms cubic-bezier(0.16, 0.84, 0.32, 1) forwards'
-                          : 'bubbleBurst 1300ms ease forwards'
-                        : isDark
-                          ? 'bubbleFadeAway 1200ms cubic-bezier(0.18, 0.7, 0.32, 1) forwards'
-                          : 'bubbleFadeAway 1100ms ease forwards'
-                      : `${isDark ? 'planetFloat' : 'bubbleFloat'} 9.6s ease-in-out infinite ${layout.delay}`,
-                  transition: 'transform 220ms ease',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -357,7 +617,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   '&:hover':
                     viewState === 'bubbles'
                       ? {
-                          transform: 'translateY(-6px) scale(1.04)',
+                          filter: 'brightness(1.08)',
                         }
                       : undefined,
                 }}
@@ -386,6 +646,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
 
         {(viewState === 'entering' || viewState === 'leaving') && (
           <Box
+            className="experience-transition-layer"
             sx={{
               position: 'absolute',
               inset: '-8%',
@@ -394,9 +655,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 ? 'radial-gradient(circle at 50% 50%, rgba(179, 209, 255, 0.25), rgba(34, 65, 123, 0.52) 32%, rgba(7, 14, 29, 0.94) 66%)'
                 : 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.35), rgba(14, 26, 56, 0.82) 45%, rgba(2, 4, 10, 0.96) 70%)',
               mixBlendMode: 'screen',
-              animation: viewState === 'entering'
-                ? (isDark ? 'lightyearTunnel 5s cubic-bezier(0.17, 0.82, 0.31, 1) forwards' : 'warpTunnelIn 1.6s ease forwards')
-                : (isDark ? 'lightyearTunnel 5s cubic-bezier(0.17, 0.82, 0.31, 1) reverse both' : 'warpTunnelOut 1.4s ease forwards'),
               '&::before': isDark
                 ? {
                     content: '""',
@@ -406,9 +664,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                       'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.05) 5.2% 5.6%, transparent 5.8% 11%)',
                     transformOrigin: 'center',
                     filter: 'blur(0.4px)',
-                    animation: viewState === 'entering'
-                      ? 'lightyearStreak 5s cubic-bezier(0.2, 0.76, 0.28, 1) forwards, volumetricSweep 5s ease-out forwards'
-                      : 'lightyearStreak 5s cubic-bezier(0.2, 0.76, 0.28, 1) reverse both, volumetricSweep 5s ease-out reverse both',
                   }
                 : undefined,
               '&::after': isDark
@@ -424,9 +679,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                     background:
                       'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.85) 24%, rgba(211, 237, 255, 0.95) 50%, rgba(129, 201, 255, 0.85) 76%, rgba(80, 165, 255, 0) 100%)',
                     boxShadow: '0 0 14px rgba(126, 186, 255, 0.9), 0 0 32px rgba(95, 162, 255, 0.62)',
-                    animation: viewState === 'entering'
-                      ? 'anamorphicBlueStreak 5s cubic-bezier(0.2, 0.78, 0.32, 1) forwards'
-                      : 'anamorphicBlueStreak 5s cubic-bezier(0.2, 0.78, 0.32, 1) reverse both',
                   }
                 : undefined,
             }}
@@ -436,6 +688,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
         {isDark && isTransitioning && (
           <>
             <Box
+              className="experience-transition-layer"
               sx={{
                 position: 'absolute',
                 left: '50%',
@@ -446,12 +699,10 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 borderRadius: '50%',
                 border: '1px solid rgba(170, 206, 255, 0.42)',
                 boxShadow: '0 0 24px rgba(131, 184, 255, 0.45), inset 0 0 24px rgba(123, 171, 242, 0.22)',
-                animation: viewState === 'entering'
-                  ? 'lensGhostOrbit 5s cubic-bezier(0.19, 0.76, 0.33, 1) forwards'
-                  : 'lensGhostOrbit 5s cubic-bezier(0.19, 0.76, 0.33, 1) reverse both',
               }}
             />
             <Box
+              className="experience-transition-layer"
               sx={{
                 position: 'absolute',
                 left: '50%',
@@ -463,12 +714,10 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 mixBlendMode: 'screen',
                 background:
                   'radial-gradient(circle at 52% 48%, rgba(255, 224, 188, 0.24), rgba(255, 159, 109, 0.18) 20%, rgba(255, 104, 66, 0.12) 34%, rgba(94, 142, 230, 0.08) 56%, rgba(0,0,0,0) 72%)',
-                animation: viewState === 'entering'
-                  ? 'halationBloom 5s cubic-bezier(0.2, 0.74, 0.3, 1) forwards'
-                  : 'halationBloom 5s cubic-bezier(0.2, 0.74, 0.3, 1) reverse both',
               }}
             />
             <Box
+              className="experience-transition-layer"
               sx={{
                 position: 'absolute',
                 left: '50%',
@@ -480,9 +729,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 background:
                   'conic-gradient(from 0deg, rgba(185, 222, 255, 0.18) 0deg 6deg, transparent 6deg 45deg, rgba(185, 222, 255, 0.18) 45deg 51deg, transparent 51deg 90deg, rgba(185, 222, 255, 0.18) 90deg 96deg, transparent 96deg 135deg, rgba(185, 222, 255, 0.18) 135deg 141deg, transparent 141deg 180deg, rgba(185, 222, 255, 0.18) 180deg 186deg, transparent 186deg 225deg, rgba(185, 222, 255, 0.18) 225deg 231deg, transparent 231deg 270deg, rgba(185, 222, 255, 0.18) 270deg 276deg, transparent 276deg 315deg, rgba(185, 222, 255, 0.18) 315deg 321deg, transparent 321deg 360deg)',
                 filter: 'blur(0.5px)',
-                animation: viewState === 'entering'
-                  ? 'starburstEight 5s cubic-bezier(0.2, 0.78, 0.31, 1) forwards'
-                  : 'starburstEight 5s cubic-bezier(0.2, 0.78, 0.31, 1) reverse both',
               }}
             />
           </>
@@ -490,15 +736,13 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
 
         {(viewState === 'timeline' || viewState === 'leaving') && (
           <Box
+            ref={timelineRef}
             sx={{
               width: '100%',
               height: 'auto',
               px: { xs: 1, md: 2 },
               py: { xs: 1.2, md: 1.6 },
               overflow: 'visible',
-              animation: viewState === 'timeline'
-                ? (isDark ? 'timelineIn 1.35s cubic-bezier(0.2, 0.78, 0.3, 1)' : 'timelineIn 1s ease')
-                : (isDark ? 'timelineOut 1.45s cubic-bezier(0.23, 0.73, 0.35, 1) forwards' : 'timelineOut 1.05s ease forwards'),
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5, px: { xs: 0.5, md: 1 } }}>
@@ -548,7 +792,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                       {index < visibleItems.length - 1 && <TimelineConnector />}
                     </TimelineSeparator>
                     <TimelineContent sx={{ py: 0.5, px: { xs: 1, md: 2 } }}>
-                      <div className="cards-container">
+                      <div className="cards-container experience-card-pop">
                         <OutlinedCard
                           title={item.jobname}
                           subtitle={item.exptype}

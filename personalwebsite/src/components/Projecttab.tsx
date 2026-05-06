@@ -1,6 +1,78 @@
 import React, { useState } from 'react';
+import gsap from 'gsap';
 import { Button, ButtonGroup, Typography, Box, Paper } from '@mui/material';
 import { projectCategories, ProjectCategory, projects } from '../data/projects';
+import { ProjectItem } from '../types';
+import { useGsapTilt } from '../hooks/useGsapTilt';
+
+interface ProjectCardProps {
+  project: ProjectItem;
+  index: number;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
+  const cardRef = React.useRef<HTMLDivElement | null>(null);
+  const tilt = useGsapTilt(cardRef, { rotate: 7, lift: 0 });
+
+  React.useLayoutEffect(() => {
+    const target = cardRef.current;
+    if (!target) {
+      return undefined;
+    }
+
+    const animation = gsap.fromTo(
+      target,
+      { autoAlpha: 0, y: 12 },
+      { autoAlpha: 1, y: 0, duration: 0.42, delay: index * 0.06, ease: 'power3.out' }
+    );
+
+    return () => animation.kill();
+  }, [index]);
+
+  return (
+    <Paper
+      ref={cardRef}
+      elevation={0}
+      onMouseMove={tilt.onMouseMove}
+      onMouseLeave={tilt.onMouseLeave}
+      sx={{
+        p: 2.5,
+        textAlign: 'left',
+        position: 'relative',
+        overflow: 'hidden',
+        borderRadius: 3,
+        border: '1px solid rgba(99, 102, 241, 0.2)',
+        background: 'var(--panel-bg)',
+        boxShadow: '0 18px 32px rgba(1, 4, 12, 0.46)',
+        transformStyle: 'preserve-3d',
+        '&:hover': {
+          boxShadow: '0 24px 42px rgba(15, 33, 55, 0.18)',
+        },
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          background:
+            'radial-gradient(220px circle at var(--px, 50%) var(--py, 50%), rgba(255, 255, 255, 0.42), transparent 64%)',
+        },
+      }}
+    >
+      <Typography sx={{ color: 'var(--teal-500)', fontWeight: 700, mb: 0.8 }}>
+        {project.category}
+      </Typography>
+      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+        {project.name}
+      </Typography>
+      <Typography sx={{ color: 'var(--ink-700)', mb: 1.25 }}>
+        {project.summary}
+      </Typography>
+      <Typography sx={{ color: 'var(--accent-800)', fontWeight: 700 }}>
+        {project.stack}
+      </Typography>
+    </Paper>
+  );
+};
 
 export default function RecentProjects() {
   const [selectedCategory, setSelectedCategory] = useState<ProjectCategory>('All');
@@ -13,28 +85,6 @@ export default function RecentProjects() {
     selectedCategory === 'All'
       ? projects
       : projects.filter((project) => project.category === selectedCategory);
-
-  const handleTilt = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.currentTarget;
-    const rect = target.getBoundingClientRect();
-    const px = ((event.clientX - rect.left) / rect.width) * 100;
-    const py = ((event.clientY - rect.top) / rect.height) * 100;
-    const rotateY = ((px - 50) / 50) * 7;
-    const rotateX = ((50 - py) / 50) * 7;
-
-    target.style.setProperty('--tilt-x', `${rotateX.toFixed(2)}deg`);
-    target.style.setProperty('--tilt-y', `${rotateY.toFixed(2)}deg`);
-    target.style.setProperty('--px', `${px.toFixed(1)}%`);
-    target.style.setProperty('--py', `${py.toFixed(1)}%`);
-  };
-
-  const resetTilt = (event: React.MouseEvent<HTMLElement>) => {
-    const target = event.currentTarget;
-    target.style.setProperty('--tilt-x', '0deg');
-    target.style.setProperty('--tilt-y', '0deg');
-    target.style.setProperty('--px', '50%');
-    target.style.setProperty('--py', '50%');
-  };
 
   return (
     <Box
@@ -103,55 +153,7 @@ export default function RecentProjects() {
         }}
       >
         {visibleProjects.map((project, idx) => (
-          <Paper
-            key={project.name}
-            elevation={0}
-            onMouseMove={handleTilt}
-            onMouseLeave={resetTilt}
-            sx={{
-              p: 2.5,
-              textAlign: 'left',
-              position: 'relative',
-              overflow: 'hidden',
-              borderRadius: 3,
-              border: '1px solid rgba(99, 102, 241, 0.2)',
-              background: 'var(--panel-bg)',
-              boxShadow: '0 18px 32px rgba(1, 4, 12, 0.46)',
-              animation: `cardSlideIn 420ms ease ${idx * 60}ms both`,
-              transform:
-                'perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(0)',
-              transformStyle: 'preserve-3d',
-              transition: 'transform 220ms ease, box-shadow 220ms ease',
-              '&:hover': {
-                boxShadow: '0 24px 42px rgba(15, 33, 55, 0.18)',
-              },
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
-                background:
-                  'radial-gradient(220px circle at var(--px, 50%) var(--py, 50%), rgba(255, 255, 255, 0.42), transparent 64%)',
-              },
-              '@keyframes cardSlideIn': {
-                from: { opacity: 0, transform: 'translateY(10px)' },
-                to: { opacity: 1, transform: 'translateY(0)' },
-              },
-            }}
-          >
-            <Typography sx={{ color: 'var(--teal-500)', fontWeight: 700, mb: 0.8 }}>
-              {project.category}
-            </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
-              {project.name}
-            </Typography>
-            <Typography sx={{ color: 'var(--ink-700)', mb: 1.25 }}>
-              {project.summary}
-            </Typography>
-            <Typography sx={{ color: 'var(--accent-800)', fontWeight: 700 }}>
-              {project.stack}
-            </Typography>
-          </Paper>
+          <ProjectCard key={project.name} project={project} index={idx} />
         ))}
       </Box>
     </Box>

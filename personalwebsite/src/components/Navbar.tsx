@@ -183,7 +183,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, 
                     px: 2,
                     py: 1,
                     width: '100%',
-                    transition: 'all 220ms ease',
                     '&:hover': {
                       backgroundColor: 'var(--nav-hover)',
                       transform: 'translateX(2px)',

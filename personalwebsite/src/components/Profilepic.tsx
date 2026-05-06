@@ -1,4 +1,5 @@
-import React, { JSX } from 'react';
+import React, { JSX, useLayoutEffect, useRef } from 'react';
+import gsap from 'gsap';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -9,6 +10,22 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import avatar from './assets/avatar.jpg';
 
 function ProfileAvatar(): JSX.Element {
+  const portraitRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.to(portraitRef.current, {
+        y: -14,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+    }, portraitRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <Box sx={{ mt: { xs: 2, md: 5 }, px: 2, maxWidth: 1100, mx: 'auto' }}>
       <Grid container justifyContent="center" alignItems="center">
@@ -93,15 +110,9 @@ function ProfileAvatar(): JSX.Element {
         </Grid>
         <Grid size={{ xs: 12, md: 5.2, lg: 4.2 }}>
           <Box
+            ref={portraitRef}
             display="flex"
             justifyContent="center"
-            sx={{
-              animation: 'floatPortrait 7s ease-in-out infinite',
-              '@keyframes floatPortrait': {
-                '0%, 100%': { transform: 'translateY(0px)' },
-                '50%': { transform: 'translateY(-14px)' },
-              },
-            }}
           >
             <Avatar
               alt="Profile Avatar"
