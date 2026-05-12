@@ -12,7 +12,6 @@ import IntroOverlay from './components/common/IntroOverlay';
 import { usePageEffects } from './hooks/usePageEffects';
 import { CardData } from './types'; 
 function App() {
-  const [themeMode, setThemeMode] = useState<'light' | 'dark'>('dark');
   const [showIntro, setShowIntro] = useState(true);
   const data: CardData[] = cardData as CardData[]; // // Cast the JSON data to the interface
   const mainRef = useRef<HTMLElement | null>(null);
@@ -26,7 +25,7 @@ function App() {
     setShowIntro(false);
   }, []);
 
-  usePageEffects({ mainRef, themeMode });
+  usePageEffects({ mainRef });
 
   return (
     <div className={`site-shell ${showIntro ? 'intro-active' : ''}`}>
@@ -39,8 +38,6 @@ function App() {
       <NavigationBar 
       navBarColor="var(--accent-700)"
       onNavigate={handleNavigate}
-      themeMode={themeMode}
-      onToggleTheme={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
       />
       <main className="site-main" ref={mainRef}>
         <section id="home" className="page-section hero-section reveal-on-scroll">
@@ -58,7 +55,6 @@ function App() {
           <AlternateTimeline 
             title="Professional Experience"
             timelineItems={data}
-            themeMode={themeMode}
           />
         </section>
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 
 const Footer: React.FC = () => {
   return (
@@ -25,13 +25,7 @@ const Footer: React.FC = () => {
         boxShadow: 'var(--panel-shadow)',
       }}
     >
-      <Typography variant="body1">
-        © {new Date().getFullYear()} Alexander Chen. All rights reserved.
-      </Typography>
-      <Typography variant="body2" sx={{ mt: 1 }}>
-        Built with Material-UI and React.
-      </Typography>
-      <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'center', gap: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, flexWrap: 'wrap' }}>
         <Link
           href="https://linkedin.com/in/aybc2001"
           target="_blank"
@@ -40,12 +34,13 @@ const Footer: React.FC = () => {
           sx={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 0.6,
+            gap: 1.1,
             color: 'var(--ink-900)',
             fontWeight: 700,
+            fontSize: '1.24rem',
           }}
         >
-          <LinkedInIcon fontSize="small" />
+          <LinkedInIcon sx={{ fontSize: 44 }} />
           LinkedIn
         </Link>
         <Link
@@ -56,13 +51,29 @@ const Footer: React.FC = () => {
           sx={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 0.6,
+            gap: 1.1,
             color: 'var(--ink-900)',
             fontWeight: 700,
+            fontSize: '1.24rem',
           }}
         >
-          <GitHubIcon fontSize="small" />
+          <GitHubIcon sx={{ fontSize: 44 }} />
           GitHub
+        </Link>
+        <Link
+          href="mailto:Alexander.yb.chen@gmail.com"
+          underline="none"
+          sx={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 1.1,
+            color: 'var(--ink-900)',
+            fontWeight: 700,
+            fontSize: '1.24rem',
+          }}
+        >
+          <EmailRoundedIcon sx={{ fontSize: 44 }} />
+          Alexander.yb.chen@gmail.com
         </Link>
       </Box>
     </Box>

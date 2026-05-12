@@ -4,14 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 interface UsePageEffectsArgs {
   mainRef: RefObject<HTMLElement | null>;
-  themeMode: 'light' | 'dark';
 }
 
-export function usePageEffects({ mainRef, themeMode }: UsePageEffectsArgs): void {
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', themeMode);
-  }, [themeMode]);
-
+export function usePageEffects({ mainRef }: UsePageEffectsArgs): void {
   useEffect(() => {
     const mainEl = mainRef.current;
     const revealTargets = document.querySelectorAll<HTMLElement>('.reveal-on-scroll');

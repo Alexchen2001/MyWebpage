@@ -17,7 +17,6 @@ import { CardData, ExperienceTrack } from '../types';
 interface AlternateTimelineProps {
   title: string;
   timelineItems: CardData[];
-  themeMode: 'light' | 'dark';
 }
 
 interface ExperienceWarpCanvasProps {
@@ -255,11 +254,10 @@ const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, dir
 const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
   title,
   timelineItems,
-  themeMode,
 }) => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-  const isDark = themeMode === 'dark';
+  const isDark = true;
   const tracks: ExperienceTrack[] = ['Software Engineering', 'Marketing Operations', 'Education Teaching'];
 
   const [activeTrack, setActiveTrack] = React.useState<ExperienceTrack | null>(null);
@@ -466,7 +464,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
     }, stageRef);
 
     return () => ctx.revert();
-  }, [isTransitioning, viewState]);
+  }, [isTransitioning, viewState, isDark]);
 
   return (
     <Box sx={{ py: { xs: 4, md: 7 }, px: 2, textAlign: 'center', maxWidth: 1100, mx: 'auto' }}>
@@ -479,9 +477,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
             zIndex: 1600,
             pointerEvents: 'none',
             overflow: 'hidden',
-            background: isDark
-              ? 'radial-gradient(circle at 50% 52%, rgba(185, 219, 255, 0.2), rgba(23, 46, 92, 0.7) 33%, rgba(3, 6, 14, 0.95) 72%)'
-              : 'radial-gradient(circle at 50% 54%, rgba(220, 249, 255, 0.85), rgba(151, 226, 244, 0.68) 35%, rgba(80, 170, 202, 0.35) 72%)',
+            background: 'radial-gradient(circle at 50% 52%, rgba(185, 219, 255, 0.2), rgba(23, 46, 92, 0.7) 33%, rgba(3, 6, 14, 0.95) 72%)',
             mixBlendMode: 'screen',
           }}
         >
@@ -491,9 +487,8 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
             sx={{
               position: 'absolute',
               inset: 0,
-              background: isDark
-                ? 'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.065) 5.2% 5.6%, transparent 5.8% 11%)'
-                : 'repeating-linear-gradient(90deg, transparent 0 6%, rgba(231, 253, 255, 0.14) 6.2% 6.6%, transparent 6.8% 12%)',
+              background:
+                'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.065) 5.2% 5.6%, transparent 5.8% 11%)',
               filter: 'blur(0.5px)',
             }}
           />
@@ -507,12 +502,9 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               height: '5px',
               transform: 'translate(-50%, -50%)',
               borderRadius: 999,
-              background: isDark
-                ? 'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.88) 24%, rgba(211, 237, 255, 0.96) 50%, rgba(129, 201, 255, 0.88) 76%, rgba(80, 165, 255, 0) 100%)'
-                : 'linear-gradient(90deg, rgba(111, 210, 236, 0) 0%, rgba(188, 243, 255, 0.9) 30%, rgba(236, 253, 255, 0.98) 50%, rgba(188, 243, 255, 0.9) 70%, rgba(111, 210, 236, 0) 100%)',
-              boxShadow: isDark
-                ? '0 0 18px rgba(126, 186, 255, 0.95), 0 0 42px rgba(95, 162, 255, 0.66)'
-                : '0 0 18px rgba(141, 228, 255, 0.88), 0 0 42px rgba(115, 214, 240, 0.52)',
+              background:
+                'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.88) 24%, rgba(211, 237, 255, 0.96) 50%, rgba(129, 201, 255, 0.88) 76%, rgba(80, 165, 255, 0) 100%)',
+              boxShadow: '0 0 18px rgba(126, 186, 255, 0.95), 0 0 42px rgba(95, 162, 255, 0.66)',
             }}
           />
         </Box>
@@ -651,41 +643,35 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               position: 'absolute',
               inset: '-8%',
               pointerEvents: 'none',
-              background: isDark
-                ? 'radial-gradient(circle at 50% 50%, rgba(179, 209, 255, 0.25), rgba(34, 65, 123, 0.52) 32%, rgba(7, 14, 29, 0.94) 66%)'
-                : 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.35), rgba(14, 26, 56, 0.82) 45%, rgba(2, 4, 10, 0.96) 70%)',
+              background: 'radial-gradient(circle at 50% 50%, rgba(179, 209, 255, 0.25), rgba(34, 65, 123, 0.52) 32%, rgba(7, 14, 29, 0.94) 66%)',
               mixBlendMode: 'screen',
-              '&::before': isDark
-                ? {
-                    content: '""',
-                    position: 'absolute',
-                    inset: 0,
-                    background:
-                      'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.05) 5.2% 5.6%, transparent 5.8% 11%)',
-                    transformOrigin: 'center',
-                    filter: 'blur(0.4px)',
-                  }
-                : undefined,
-              '&::after': isDark
-                ? {
-                    content: '""',
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    width: '40%',
-                    height: '4px',
-                    transform: 'translate(-50%, -50%)',
-                    borderRadius: 999,
-                    background:
-                      'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.85) 24%, rgba(211, 237, 255, 0.95) 50%, rgba(129, 201, 255, 0.85) 76%, rgba(80, 165, 255, 0) 100%)',
-                    boxShadow: '0 0 14px rgba(126, 186, 255, 0.9), 0 0 32px rgba(95, 162, 255, 0.62)',
-                  }
-                : undefined,
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.05) 5.2% 5.6%, transparent 5.8% 11%)',
+                transformOrigin: 'center',
+                filter: 'blur(0.4px)',
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                width: '40%',
+                height: '4px',
+                transform: 'translate(-50%, -50%)',
+                borderRadius: 999,
+                background:
+                  'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.85) 24%, rgba(211, 237, 255, 0.95) 50%, rgba(129, 201, 255, 0.85) 76%, rgba(80, 165, 255, 0) 100%)',
+                boxShadow: '0 0 14px rgba(126, 186, 255, 0.9), 0 0 32px rgba(95, 162, 255, 0.62)',
+              },
             }}
           />
         )}
 
-        {isDark && isTransitioning && (
+        {isTransitioning && (
           <>
             <Box
               className="experience-transition-layer"

@@ -16,6 +16,8 @@
   --panel-bg-soft: linear-gradient(145deg, rgba(16, 26, 56, 0.8), rgba(12, 20, 44, 0.72));
   --panel-border: rgba(168, 189, 255, 0.22);
   --panel-shadow: 0 24px 66px rgba(1, 4, 12, 0.52);
+  --course-button-bg: rgba(16, 26, 56, 0.74);
+  --course-button-bg-hover: rgba(20, 32, 66, 0.9);
   --nav-bg-start: rgba(6, 19, 34, 0.92);
   --nav-bg-end: #1f2a58;
   --nav-text: #eaf2ff;
@@ -23,31 +25,6 @@
   --nav-hover: rgba(34, 211, 238, 0.24);
   --stars-opacity: 1;
   --grid-opacity: 0.06;
-}
-
-:root[data-theme='light'] {
-  --bg-950: #dffcf4;
-  --bg-900: #a9e7f7;
-  --surface-100: #edfef9;
-  --surface-200: #d1f5f1;
-  --ink-900: #0f2a42;
-  --ink-700: #2d5671;
-  --accent-800: #0369a1;
-  --accent-700: #0ea5a4;
-  --accent-600: #14b8a6;
-  --teal-500: #0891b2;
-  --violet-500: #38bdf8;
-  --panel-bg: linear-gradient(145deg, rgba(244, 255, 252, 0.88), rgba(214, 246, 255, 0.82));
-  --panel-bg-soft: linear-gradient(145deg, rgba(236, 253, 249, 0.9), rgba(200, 237, 247, 0.8));
-  --panel-border: rgba(45, 123, 151, 0.24);
-  --panel-shadow: 0 20px 42px rgba(36, 112, 140, 0.18);
-  --nav-bg-start: rgba(208, 248, 243, 0.92);
-  --nav-bg-end: #c8eff8;
-  --nav-text: #0f2a42;
-  --nav-subtle: rgba(45, 86, 113, 0.86);
-  --nav-hover: rgba(14, 165, 164, 0.2);
-  --stars-opacity: 0;
-  --grid-opacity: 0.12;
 }
 
 * {

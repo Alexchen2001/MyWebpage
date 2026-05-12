@@ -99,12 +99,12 @@ const BlogSection: React.FC = () => {
                   background:
                     selectedCourse === item.code
                       ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
-                      : 'rgba(16, 26, 56, 0.74)',
+                      : 'var(--course-button-bg)',
                   '&:hover': {
                     background:
                       selectedCourse === item.code
                         ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
-                        : 'rgba(20, 32, 66, 0.9)',
+                        : 'var(--course-button-bg-hover)',
                   },
                 }}
               >
@@ -158,12 +158,12 @@ const BlogSection: React.FC = () => {
                   background:
                     selectedGeorgiaCourse === item.code
                       ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
-                      : 'rgba(16, 26, 56, 0.74)',
+                      : 'var(--course-button-bg)',
                   '&:hover': {
                     background:
                       selectedGeorgiaCourse === item.code
                         ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
-                        : 'rgba(20, 32, 66, 0.9)',
+                        : 'var(--course-button-bg-hover)',
                   },
                 }}
               >

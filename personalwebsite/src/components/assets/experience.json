@@ -1,43 +1,134 @@
 [
   {
-    "jobname": "MyStage Music - Full Stack Software Engineer",
+    "jobname": "MyStage Music - Software Engineer",
     "exptype": "Experience",
     "employmentlocation": "Remote (Wisconsin-based)",
     "employmentdate": "April 2025 - Present",
-    "buttonText": "Web3 Platform + Festival Scale",
+    "buttonText": "Web3 Platform + Geo-NFT + Firebase",
     "track": "Software Engineering",
     "highlights": [
-      "Sole backend engineer owning Firebase database design and API implementation/maintenance.",
-      "Designed concert NFT distribution using Google Maps/Geolocation APIs with proximity and venue rules.",
-      "Built sync flows between app data and blockchain records, including end-user eligibility checks.",
-      "Supported rollout planning for a 300,000-attendee festival event."
+      "Early-stage Web3 music startup; sole backend engineer responsible for Firebase database architecture, Python APIs with Firebase Functions, and React admin interfaces for a platform connecting music creators and festival audiences.",
+      "Designed and implemented concert NFT distribution using Google Maps/Geolocation APIs with proximity-based rules; built data synchronization between application state and blockchain records.",
+      "Delivered production infrastructure for a major music festival with 300,000+ attendees.",
+      "Built a scheduled-tasks management system end-to-end, including Pydantic data models, CRUD APIs on Firebase Functions, a React admin UI with data grid, form validation, and bulk operations.",
+      "Wrote a 10+-scenario test suite covering edge cases and large-batch Firestore processing.",
+      "Built notification badge systems using stream queries to reduce Firestore overhead, developed sticker collections UI with TanStack Query and lazy-loaded JSON viewer, and integrated GoHighLevel CRM for automated contact sync and tag management."
+    ]
+  },
+  {
+    "jobname": "Coding With Kids - Coding Instructor",
+    "exptype": "Part-time",
+    "employmentlocation": "Seattle, WA - On-site",
+    "employmentdate": "September 2024 - October 2025",
+    "buttonText": "Classroom Management + Curriculum Development",
+    "track": "Education Teaching",
+    "highlights": [
+      "Led project-based coding classes for students ages 4-18, helping learners build games, websites, and apps while adapting explanations to different ages, skill levels, and learning styles.",
+      "Delivered Coding With Kids' Coder's Ladder curriculum, including block-based programming with Scratch and text-based concepts in Python and JavaScript.",
+      "Maintained a safe, positive, and engaging learning environment for online and in-person classes while supporting students with diverse abilities.",
+      "Prepared lesson plans, guided debugging and project completion, sent class notes and progress feedback to parents, and maintained a 100% customer satisfaction rate.",
+      "Built supportive relationships with students and families through patient instruction, individualized help, and follow-up, contributing to an 80% student retention rate.",
+      "Worked with program coordinators to follow curriculum standards, support after-school and camp-style instruction, and improve the student learning experience."
     ]
   },
   {
     "jobname": "Future Arts - Software Engineer",
-    "exptype": "Experience",
-    "employmentlocation": "Seattle, WA",
+    "exptype": "Internship",
+    "employmentlocation": "Seattle, WA - Hybrid",
     "employmentdate": "September 2023 - June 2024",
-    "buttonText": "AWS Serverless + NLP Pipeline",
+    "buttonText": "AWS Serverless + Agile + NLP Pipeline",
     "track": "Software Engineering",
     "highlights": [
-      "Built scraping/data processing platform using Lambda, S3, API Gateway, EventBridge, Step Functions, Python, and spaCy.",
-      "Implemented end-to-end ingestion and normalization for multi-source artist data.",
-      "Raised data accuracy to 80-90%, reduced manual entry by ~80%, and lowered infra cost by ~70%.",
-      "Integrated Airtable as system of record and exposed APIs for downstream tools."
+      "Designed and shipped a web scraping and data processing system for an arts NGO using Lambda, S3, API Gateway, EventBridge, Step Functions, Python, BeautifulSoup, Requests, and spaCy.",
+      "Built an end-to-end ingestion and cleaning pipeline for multi-source, multi-format artist data from artist sites and social platforms.",
+      "Increased artist information accuracy to 80-90%, reduced manual data entry by about 80%, and lowered infrastructure costs by about 70% via pay-per-use AWS Lambda.",
+      "Connected Airtable as the system of record, exposed APIs for downstream tools, documented the architecture, and delivered demos to non-technical stakeholders."
     ]
   },
   {
-    "jobname": "Bilimetrix USA - Software Engineer Intern",
-    "exptype": "Experience",
-    "employmentlocation": "Seattle, WA",
+    "jobname": "Comcast - Retail Service Associate",
+    "exptype": "Part-time",
+    "employmentlocation": "Seattle, WA - On-site",
+    "employmentdate": "July 2021 - February 2024",
+    "buttonText": "Team Management + Technical Support",
+    "track": "Marketing Operations",
+    "highlights": [
+      "Delivered in-person support for service, billing, device, and connectivity issues in a fast-paced retail environment while maintaining a consecutive yearly average 100% customer satisfaction rate.",
+      "Explained internet, mobile, device, accessory, and service-plan features in customer-friendly language to support confident purchase, setup, and troubleshooting decisions.",
+      "Identified customer needs through active listening and recommended Comcast products, service upgrades, and accessories to improve customer experience and support sales goals.",
+      "Supported inventory, device readiness, product displays, transactions, and service compliance while documenting recurring technical issues and customer concerns.",
+      "Worked with leadership, IT, operations, and retail teammates to improve store efficiency, resolve recurring issues, and communicate customer feedback for process improvements."
+    ]
+  },
+  {
+    "jobname": "Bilimetrix s.r.l. - Software Developer",
+    "exptype": "Internship",
+    "employmentlocation": "Seattle, WA - Remote",
     "employmentdate": "June 2023 - August 2023",
-    "buttonText": "C# .NET Medical Imaging",
+    "buttonText": "C# .NET + Razor Pages + Medical Imaging",
     "track": "Software Engineering",
     "highlights": [
-      "Contributed to a Razor Pages app and implemented image checks for rotation, color balance, and brightness.",
-      "Built dynamic UI components and improved accessibility/cross-browser behavior.",
-      "Helped redesign data models and refactor tests; reached 100% unit test coverage and reduced page load time by 30%."
+      "Collaborated on a C# .NET web application for medical image judging using Razor Pages and Git in an Agile environment.",
+      "Developed image processing algorithms to detect rotation, color imbalance, and brightness issues, improving medical image assessment accuracy.",
+      "Designed and implemented dynamic UI components that improved the judging interface, accessibility, and cross-browser compatibility.",
+      "Contributed to data model redesign for ImageSeverity and ResultImage while refactoring the test suite to improve organization and reduce redundancy.",
+      "Achieved 100% code coverage through unit testing, made over 20 Git commits, and reduced page load time by 30%."
+    ]
+  },
+  {
+    "jobname": "Seattle University - Alumni Engagement Ambassador",
+    "exptype": "Part-time",
+    "employmentlocation": "Seattle, WA - On-site",
+    "employmentdate": "October 2022 - January 2023",
+    "buttonText": "Event Planning + Relationship Management",
+    "track": "Marketing Operations",
+    "highlights": [
+      "Facilitated recruitment events for undergraduates interested in alumni connections and resources.",
+      "Established and maintained working relationships with partner offices across campus, including the Department of Science and Engineering and Career Engagement.",
+      "Tracked alumni network enrollment and current student graduation status, maintained previous student records, and reported enrollment statistics.",
+      "Handled sensitive student information while maintaining high confidentiality standards."
+    ]
+  },
+  {
+    "jobname": "Seattle Central College - Ambassador, Information Central",
+    "exptype": "Part-time",
+    "employmentlocation": "Seattle, WA",
+    "employmentdate": "July 2020 - August 2021",
+    "buttonText": "Student Support + Training + Information Management",
+    "track": "Education Teaching",
+    "highlights": [
+      "Assisted prospective, current, former, and incoming students through email, phone, LiveChat, and social media by answering school-related questions and directing them to resources.",
+      "Guided new students through school systems, campus resources, enrollment steps, and service processes to improve their transition experience.",
+      "Helped train incoming ambassadors on communication standards, student support workflows, and common service questions.",
+      "Provided accurate and timely information about school services, departments, processes, and student resources in a high-volume support environment."
+    ]
+  },
+  {
+    "jobname": "Metro by T-Mobile - Sales",
+    "exptype": "Full-time",
+    "employmentlocation": "Seattle, WA",
+    "employmentdate": "November 2019 - April 2020",
+    "buttonText": "Retail Sales + Customer Service + Store Operations",
+    "track": "Marketing Operations",
+    "highlights": [
+      "Assisted customers with mobile products, service plans, accessories, account questions, and purchasing decisions in a wireless retail environment.",
+      "Explained phone features, plan options, promotions, and service details to help customers select products that matched their needs and budget.",
+      "Handled customer concerns, returns, exchanges, service questions, sales, and payment transactions through POS systems.",
+      "Supported inventory monitoring, merchandise restocking, product organization, display maintenance, and general store cleanliness."
+    ]
+  },
+  {
+    "jobname": "GEMKELL Corporation - Sales Associate",
+    "exptype": "Experience",
+    "employmentlocation": "Saipan Municipality, Northern Mariana Islands",
+    "employmentdate": "November 2017 - May 2019",
+    "buttonText": "Customer Service + POS + Inventory",
+    "track": "Marketing Operations",
+    "highlights": [
+      "Greeted customers, answered product questions, provided recommendations, and supported a positive in-store shopping experience.",
+      "Educated customers about new products, promotions, and merchandise features to support purchasing decisions and increase sales opportunities.",
+      "Conducted cash and credit card transactions through POS systems with attention to accuracy and customer service standards.",
+      "Restocked merchandise, organized new inventory, monitored product availability, and maintained clean retail displays."
     ]
   }
 ]

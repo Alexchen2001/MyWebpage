@@ -9,8 +9,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import WorkRoundedIcon from '@mui/icons-material/WorkRounded';
@@ -22,8 +20,6 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 interface NavigationBarProps {
   navBarColor: string; // Pass-in parameter for navbar background color
   onNavigate: (sectionId: string) => void;
-  themeMode: 'light' | 'dark';
-  onToggleTheme: () => void;
 }
 
 const pages = ['Home', 'About', 'Experience', 'Projects', 'Blog', 'Contact'];
@@ -37,7 +33,7 @@ const pageIcons: Record<string, React.ReactNode> = {
   Blog: <ArticleRoundedIcon fontSize="small" />,
 };
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, themeMode, onToggleTheme }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -93,14 +89,6 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, 
           >
             ALEXANDER CHEN
           </Typography>
-
-          <IconButton
-            onClick={onToggleTheme}
-            sx={{ display: { xs: 'inline-flex', md: 'none' }, color: 'var(--nav-text)' }}
-            aria-label="Toggle theme mode"
-          >
-            {themeMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
-          </IconButton>
 
           {/* Mobile Menu */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -194,28 +182,16 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ navBarColor, onNavigate, 
               ))}
             </Box>
 
-            <Button
-              onClick={onToggleTheme}
-              startIcon={themeMode === 'dark' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
-              sx={{
-                mx: 1,
-                mb: 1.2,
-                borderRadius: 999,
-                textTransform: 'none',
-                fontWeight: 700,
-                color: 'var(--nav-text)',
-                border: '1px solid var(--panel-border)',
-                background: 'rgba(0,0,0,0.08)',
-              }}
-            >
-              {themeMode === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </Button>
-
             <Box sx={{ px: 1, pb: 1.5 }}>
               <Typography sx={{ color: 'var(--nav-subtle)', fontSize: '0.72rem', lineHeight: 1.5 }}>
-                Atlanta, GA
+                Seattle, WA
                 <br />
-                Open to software engineering roles.
+                Open to work
+              </Typography>
+              <Typography sx={{ color: 'var(--nav-subtle)', fontSize: '0.68rem', lineHeight: 1.5, mt: 1.4 }}>
+                © 2026 Alexander Chen. All rights reserved.
+                <br />
+                Built with Material-UI and React.
               </Typography>
             </Box>
           </Box>
