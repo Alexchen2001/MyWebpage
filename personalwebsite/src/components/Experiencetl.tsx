@@ -229,10 +229,10 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
     ? timelineItems.filter((item) => normalizeTrack(item.track) === activeTrack)
     : [];
 
-  const bubbleLayout: Record<ExperienceTrack, { sizeDesktop: number; sizeMobile: number; delay: string }> = {
-    'Software Engineering': { sizeDesktop: 236, sizeMobile: 150, delay: '0s' },
-    'Marketing Operations': { sizeDesktop: 236, sizeMobile: 150, delay: '1.2s' },
-    'Education Teaching': { sizeDesktop: 236, sizeMobile: 150, delay: '2.4s' },
+  const bubbleLayout: Record<ExperienceTrack, { sizeDesktop: number; sizeMobile: string; delay: string }> = {
+    'Software Engineering': { sizeDesktop: 236, sizeMobile: 'clamp(124px, 38vw, 150px)', delay: '0s' },
+    'Marketing Operations': { sizeDesktop: 236, sizeMobile: 'clamp(124px, 38vw, 150px)', delay: '1.2s' },
+    'Education Teaching': { sizeDesktop: 236, sizeMobile: 'clamp(124px, 38vw, 150px)', delay: '2.4s' },
   };
 
   const handleTrackClick = (track: ExperienceTrack) => {
@@ -479,8 +479,8 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
         ref={stageRef}
         sx={{
           position: 'relative',
-          minHeight: { xs: 420, md: 500 },
-          height: viewState === 'bubbles' || viewState === 'entering' ? { xs: 420, md: 500 } : 'auto',
+          minHeight: { xs: 'auto', md: 500 },
+          height: viewState === 'bubbles' || viewState === 'entering' ? { xs: 'auto', md: 500 } : 'auto',
           mb: 2.5,
           overflow: 'visible',
           borderRadius: 0,
@@ -495,7 +495,8 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
           <Box
             sx={{
               width: '100%',
-              minHeight: { xs: 420, md: 500 },
+              minHeight: { xs: 'auto', md: 500 },
+              py: { xs: 1, md: 0 },
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -512,8 +513,8 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   component="button"
                   onClick={() => handleTrackClick(track)}
                   sx={{
-                    width: { xs: `${layout.sizeMobile}px`, md: `${layout.sizeDesktop}px` },
-                    height: { xs: `${layout.sizeMobile}px`, md: `${layout.sizeDesktop}px` },
+                    width: { xs: layout.sizeMobile, md: `${layout.sizeDesktop}px` },
+                    height: { xs: layout.sizeMobile, md: `${layout.sizeDesktop}px` },
                   borderRadius: '50%',
                   border: '1px solid rgba(255, 211, 142, 0.3)',
                   background:
@@ -522,7 +523,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   px: 1.2,
                   textAlign: 'center',
                   fontWeight: 800,
-                  fontSize: { xs: '1rem', md: '1.16rem' },
+                  fontSize: { xs: '0.92rem', sm: '1rem', md: '1.16rem' },
                   lineHeight: 1.22,
                   cursor: viewState === 'bubbles' ? 'pointer' : 'default',
                   boxShadow:
