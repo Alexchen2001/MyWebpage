@@ -22,22 +22,19 @@ interface AlternateTimelineProps {
 interface ExperienceWarpCanvasProps {
   active: boolean;
   direction: 'entering' | 'leaving';
-  isDark: boolean;
 }
 
-interface WarpParticle {
-  angle: number;
-  radius: number;
-  depth: number;
+interface BinaryColumn {
+  x: number;
+  y: number;
+  speed: number;
   size: number;
-  hue: number;
-  saturation: number;
-  lane: number;
-  arm: number;
-  planet: boolean;
+  length: number;
+  alpha: number;
+  offset: number;
 }
 
-const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, direction, isDark }) => {
+const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, direction }) => {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
   const reduceMotion = React.useMemo(
     () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
@@ -53,32 +50,23 @@ const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, dir
 
     const state = {
       progress: direction === 'entering' ? 0 : 1,
-      bloom: direction === 'entering' ? 0 : 1,
       spin: 0,
-      tunnel: direction === 'entering' ? 0 : 1,
-      flash: 0,
-      collapse: direction === 'entering' ? 0 : 1,
-      expansion: direction === 'entering' ? 0 : 1,
     };
     let width = 0;
     let height = 0;
     let dpr = 1;
-    let particles: WarpParticle[] = [];
+    let binaryColumns: BinaryColumn[] = [];
 
-    const createParticles = () => {
-      const count = window.innerWidth < 720 ? 190 : 360;
-      const armCount = 5;
-      const galaxyPalette = isDark ? [198, 220, 248, 274, 302, 326, 38] : [184, 204, 226, 262, 292, 318, 42];
-      particles = Array.from({ length: count }, () => ({
-        angle: (Math.floor(Math.random() * armCount) / armCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.46,
-        radius: 18 + Math.pow(Math.random(), 0.72) * 500,
-        depth: 0.28 + Math.random() * 1.9,
-        size: 0.65 + Math.random() * 3.5,
-        hue: galaxyPalette[Math.floor(Math.random() * galaxyPalette.length)] + Math.random() * 18 - 9,
-        saturation: 84 + Math.random() * 16,
-        lane: Math.random(),
-        arm: Math.floor(Math.random() * armCount),
-        planet: Math.random() > 0.9,
+    const createBinaryColumns = () => {
+      const count = window.innerWidth < 720 ? 42 : 78;
+      binaryColumns = Array.from({ length: count }, (_, index) => ({
+        x: index / Math.max(1, count - 1),
+        y: Math.random(),
+        speed: 0.18 + Math.random() * 0.7,
+        size: window.innerWidth < 720 ? 13 + Math.random() * 7 : 14 + Math.random() * 10,
+        length: 8 + Math.floor(Math.random() * 18),
+        alpha: 0.28 + Math.random() * 0.62,
+        offset: Math.random() * 100,
       }));
     };
 
@@ -90,104 +78,68 @@ const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, dir
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      createParticles();
+      createBinaryColumns();
     };
 
     const render = () => {
-      const cx = width / 2;
-      const cy = height / 2;
-      const aspect = width / Math.max(height, 1);
       const progress = gsap.utils.clamp(0, 1, state.progress);
-      const collapse = gsap.utils.clamp(0, 1, state.collapse);
-      const expansion = gsap.utils.clamp(0, 1, state.expansion);
-      const burst = gsap.parseEase('power4.out')(expansion);
-      const pull = gsap.parseEase('power3.inOut')(collapse);
-      const singularityRadius = Math.max(width, height) * (0.035 + state.tunnel * 0.16);
+      const digitalPhase = gsap.utils.clamp(0, 1, (progress - 0.42) / 0.58);
 
       ctx.clearRect(0, 0, width, height);
-      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalCompositeOperation = 'source-over';
 
-      const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(width, height) * 0.68);
-      bloom.addColorStop(0, isDark ? `rgba(244, 250, 255, ${0.28 + state.bloom * 0.42})` : `rgba(255, 255, 255, ${0.32 + state.bloom * 0.38})`);
-      bloom.addColorStop(0.18, isDark ? `rgba(67, 214, 255, ${0.18 + state.bloom * 0.2})` : `rgba(34, 211, 238, ${0.18 + state.bloom * 0.18})`);
-      bloom.addColorStop(0.42, isDark ? 'rgba(126, 87, 255, 0.2)' : 'rgba(14, 165, 164, 0.18)');
-      bloom.addColorStop(0.68, isDark ? 'rgba(255, 56, 171, 0.12)' : 'rgba(99, 102, 241, 0.1)');
-      bloom.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = bloom;
+      ctx.fillStyle = `rgba(2, 7, 10, ${0.16 + digitalPhase * 0.24})`;
       ctx.fillRect(0, 0, width, height);
 
-      const singularity = ctx.createRadialGradient(cx, cy, 0, cx, cy, singularityRadius * (1.5 + state.flash * 2.6));
-      singularity.addColorStop(0, `rgba(255, 255, 255, ${0.58 + state.flash * 0.36})`);
-      singularity.addColorStop(0.22, isDark ? `rgba(125, 211, 252, ${0.32 + state.bloom * 0.22})` : `rgba(236, 254, 255, ${0.34 + state.bloom * 0.18})`);
-      singularity.addColorStop(0.48, isDark ? 'rgba(168, 85, 247, 0.26)' : 'rgba(59, 130, 246, 0.18)');
-      singularity.addColorStop(0.74, isDark ? 'rgba(255, 56, 171, 0.18)' : 'rgba(14, 165, 164, 0.14)');
-      singularity.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = singularity;
-      ctx.beginPath();
-      ctx.arc(cx, cy, singularityRadius * (1.8 + state.flash * 2.8), 0, Math.PI * 2);
-      ctx.fill();
-
-      for (let ring = 0; ring < 5; ring += 1) {
-        const ringProgress = (progress * 1.55 + ring * 0.18) % 1;
-        const radius = singularityRadius * (1.3 + ringProgress * (4.8 + burst * 4.2));
-        ctx.strokeStyle = isDark
-          ? `rgba(${ring % 2 ? '255, 56, 171' : '125, 211, 252'}, ${0.2 * (1 - ringProgress) * (0.55 + state.bloom)})`
-          : `rgba(${ring % 2 ? '99, 102, 241' : '14, 165, 164'}, ${0.18 * (1 - ringProgress) * (0.55 + state.bloom)})`;
-        ctx.lineWidth = 1.2 + ringProgress * 7;
-        ctx.beginPath();
-        ctx.ellipse(cx, cy, radius * aspect * (1.25 + burst * 0.55), radius * (0.64 + burst * 0.42), state.spin * 0.62 + ring * 0.28, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-      particles.forEach((particle) => {
-        const spiralCurl = particle.radius * 0.014;
-        const orbit = state.spin * (0.42 + particle.depth * 0.2) + spiralCurl + particle.lane * 0.42;
-        const armWave = Math.sin(particle.radius * 0.018 + progress * Math.PI * 2 + particle.arm) * 18;
-        const galaxyRadius = particle.radius * (1.04 - pull * 0.72 + burst * (0.65 + particle.depth * 0.5)) + armWave;
-        const angle = particle.angle + orbit + pull * 1.85 - burst * 0.28;
-        const verticalFlatten = 0.46 + particle.lane * 0.2 + burst * 0.18;
-        const x = cx + Math.cos(angle) * galaxyRadius * aspect;
-        const y = cy + Math.sin(angle) * galaxyRadius * verticalFlatten;
-        const trailAngle = angle - (0.18 + pull * 0.8 + burst * 0.22) * (particle.depth + 0.4);
-        const trailRadius = Math.max(6, galaxyRadius * (1 - 0.08 - pull * 0.2));
-        const tx = cx + Math.cos(trailAngle) * trailRadius * aspect;
-        const ty = cy + Math.sin(trailAngle) * trailRadius * verticalFlatten;
-        const alphaWindow = Math.max(0, Math.min(1, 0.42 + progress * 1.2));
-        const alpha = alphaWindow * (0.3 + particle.depth * 0.26) * (0.75 + state.bloom * 0.44);
-
-        const gradient = ctx.createLinearGradient(tx, ty, x, y);
-        gradient.addColorStop(0, `hsla(${particle.hue}, ${particle.saturation}%, 70%, 0)`);
-        gradient.addColorStop(0.38, `hsla(${particle.hue}, ${particle.saturation}%, 64%, ${alpha * 0.56})`);
-        gradient.addColorStop(0.72, `hsla(${particle.hue + 24}, 100%, 76%, ${alpha * 0.86})`);
-        gradient.addColorStop(1, `hsla(${particle.hue + 48}, 100%, 94%, ${alpha})`);
-
-        ctx.strokeStyle = gradient;
-        ctx.lineWidth = particle.size * (0.65 + pull * 1.15 + burst * 1.9);
-        ctx.beginPath();
-        ctx.moveTo(tx, ty);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-
-        if (particle.planet || (particle.depth > 1.55 && progress > 0.35)) {
-          const planetSize = particle.size * (particle.planet ? 3.4 : 1.9) * (0.8 + burst * 0.75);
-          const planetGlow = ctx.createRadialGradient(x, y, 0, x, y, planetSize * 4);
-          planetGlow.addColorStop(0, `hsla(${particle.hue + 30}, 100%, 88%, ${alpha * 0.7})`);
-          planetGlow.addColorStop(0.36, `hsla(${particle.hue}, 95%, 62%, ${alpha * 0.28})`);
-          planetGlow.addColorStop(1, `hsla(${particle.hue}, 95%, 62%, 0)`);
-          ctx.fillStyle = planetGlow;
-          ctx.beginPath();
-          ctx.arc(x, y, planetSize * 4, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = `hsla(${particle.hue + 36}, 100%, 86%, ${alpha * 0.82})`;
-          ctx.beginPath();
-          ctx.arc(x, y, planetSize, 0, Math.PI * 2);
-          ctx.fill();
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-over';
+      const binaryFade = direction === 'entering' ? progress : 1 - progress;
+      const codeAlpha = 0.18 + binaryFade * 0.72;
+      ctx.font = `${window.innerWidth < 720 ? 15 : 19}px "SFMono-Regular", Consolas, monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      binaryColumns.forEach((column, columnIndex) => {
+        const x = column.x * width;
+        const fall = ((column.y + state.spin * column.speed * 0.14 + progress * 0.55) % 1) * height;
+        for (let row = 0; row < column.length; row += 1) {
+          const y = (fall + row * column.size * 1.25) % height;
+          const bit = (row + columnIndex + Math.floor(state.spin * 16 + column.offset)) % 2;
+          const rowAlpha = codeAlpha * column.alpha * (1 - row / (column.length * 1.15));
+          ctx.fillStyle =
+            row === 0
+              ? `rgba(185, 239, 235, ${rowAlpha * 0.46})`
+              : `rgba(70, 198, 178, ${rowAlpha * 0.42})`;
+          ctx.fillText(String(bit), x, y);
         }
       });
 
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = `rgba(255, 255, 255, ${state.flash * 0.16})`;
-      ctx.fillRect(0, 0, width, height);
+      const blockSize = window.innerWidth < 720 ? 34 : 46;
+      const wipe = gsap.parseEase('power3.inOut')(progress);
+      for (let x = 0; x < width; x += blockSize) {
+        const columnProgress = gsap.utils.clamp(0, 1, wipe * 1.35 - x / width * 0.35);
+        if (columnProgress <= 0) {
+          continue;
+        }
+        for (let y = 0; y < height; y += blockSize) {
+          const flicker = ((x * 17 + y * 31 + Math.floor(state.spin * 40)) % 9) / 9;
+          if (flicker > columnProgress) {
+            continue;
+          }
+          ctx.fillStyle = `rgba(70, 198, 178, ${0.026 + columnProgress * 0.052})`;
+          ctx.fillRect(x, y, blockSize * 0.82, blockSize * 0.82);
+        }
+      }
+      ctx.restore();
+
+      if (digitalPhase > 0) {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = `rgba(70, 198, 178, ${0.045 * digitalPhase})`;
+        for (let lane = 0; lane < 18; lane += 1) {
+          const x = ((lane / 18) * width + state.spin * 36) % width;
+          const h = 18 + ((lane * 17) % 70);
+          ctx.fillRect(x, (lane * 47 + state.spin * 90) % height, 2, h);
+        }
+      }
 
       ctx.globalCompositeOperation = 'source-over';
     };
@@ -196,16 +148,9 @@ const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, dir
     const timeline = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
     timeline.to(state, {
       progress: direction === 'entering' ? 1 : 0,
-      bloom: direction === 'entering' ? 1 : 0.15,
-      tunnel: direction === 'entering' ? 1 : 0.15,
-      collapse: direction === 'entering' ? 1 : 0.1,
-      expansion: direction === 'entering' ? 1 : 0,
       spin: direction === 'entering' ? 2.75 : -0.9,
       duration: direction === 'entering' ? 1.65 : 1.05,
     });
-    timeline
-      .to(state, { flash: 1, duration: 0.18, ease: 'power2.out' }, direction === 'entering' ? 0.82 : 0.42)
-      .to(state, { flash: 0, duration: 0.38, ease: 'power2.in' }, direction === 'entering' ? 1 : 0.56);
 
     gsap.set(canvas, { autoAlpha: 0 });
     gsap.to(canvas, {
@@ -229,7 +174,7 @@ const ExperienceWarpCanvas: React.FC<ExperienceWarpCanvasProps> = ({ active, dir
       gsap.ticker.remove(render);
       window.removeEventListener('resize', resize);
     };
-  }, [active, direction, isDark, reduceMotion]);
+  }, [active, direction, reduceMotion]);
 
   if (!active || reduceMotion) {
     return null;
@@ -257,7 +202,6 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
 }) => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-  const isDark = true;
   const tracks: ExperienceTrack[] = ['Software Engineering', 'Marketing Operations', 'Education Teaching'];
 
   const [activeTrack, setActiveTrack] = React.useState<ExperienceTrack | null>(null);
@@ -301,7 +245,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
     setClickedTrack(track);
     setActiveTrack(track);
     setViewState('entering');
-    transitionTimerRef.current = gsap.delayedCall(isDark ? 1.55 : 1.2, () => {
+    transitionTimerRef.current = gsap.delayedCall(1.55, () => {
       setViewState('timeline');
     });
   };
@@ -318,7 +262,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
 
     const startGalaxyReturn = () => {
       setViewState('leaving');
-      transitionTimerRef.current = gsap.delayedCall(isDark ? 1.2 : 0.95, () => {
+      transitionTimerRef.current = gsap.delayedCall(1.2, () => {
         setActiveTrack(null);
         setClickedTrack(null);
         setViewState('bubbles');
@@ -452,19 +396,19 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
       );
 
       gsap.fromTo(
-        '.experience-transition-streak',
-        { autoAlpha: entering ? 0 : 0.72, scaleX: entering ? 0.22 : 1.8 },
+        '.experience-binary-texture',
+        { autoAlpha: entering ? 0 : 0.62, y: entering ? -42 : 0 },
         {
-          autoAlpha: entering ? 0.72 : 0,
-          scaleX: entering ? 1.8 : 0.4,
-          duration: entering ? 1.1 : 0.72,
-          ease: 'power3.inOut',
+          autoAlpha: entering ? 0.62 : 0,
+          y: entering ? 54 : -36,
+          duration: entering ? 1.18 : 0.74,
+          ease: 'none',
         }
       );
     }, stageRef);
 
     return () => ctx.revert();
-  }, [isTransitioning, viewState, isDark]);
+  }, [isTransitioning, viewState]);
 
   return (
     <Box sx={{ py: { xs: 4, md: 7 }, px: 2, textAlign: 'center', maxWidth: 1100, mx: 'auto' }}>
@@ -477,34 +421,41 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
             zIndex: 1600,
             pointerEvents: 'none',
             overflow: 'hidden',
-            background: 'radial-gradient(circle at 50% 52%, rgba(185, 219, 255, 0.2), rgba(23, 46, 92, 0.7) 33%, rgba(3, 6, 14, 0.95) 72%)',
-            mixBlendMode: 'screen',
+            background:
+              'linear-gradient(115deg, rgba(2, 7, 10, 0.98), rgba(5, 18, 23, 0.96) 48%, rgba(2, 4, 7, 0.98)), repeating-linear-gradient(90deg, rgba(70, 198, 178, 0.07) 0 1px, transparent 1px 7vw)',
+            mixBlendMode: 'normal',
           }}
         >
-          <ExperienceWarpCanvas active={isTransitioning} direction={viewState === 'leaving' ? 'leaving' : 'entering'} isDark={isDark} />
+          <ExperienceWarpCanvas active={isTransitioning} direction={viewState === 'leaving' ? 'leaving' : 'entering'} />
+          <Box
+            className="experience-binary-texture"
+            aria-hidden="true"
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              color: 'rgba(78, 218, 255, 0.1)',
+              fontFamily: 'SFMono-Regular, Consolas, monospace',
+              fontSize: { xs: '0.72rem', md: '0.95rem' },
+              lineHeight: 1.65,
+              letterSpacing: '0.45em',
+              whiteSpace: 'pre-wrap',
+              overflow: 'hidden',
+              mixBlendMode: 'normal',
+              opacity: 0.8,
+              transform: 'skewY(-4deg) scale(1.08)',
+            }}
+          >
+            {Array.from({ length: 26 }, (_, row) =>
+              Array.from({ length: 54 }, (_, col) => ((row * 7 + col * 5) % 3 === 0 ? '1' : '0')).join('')
+            ).join('\n')}
+          </Box>
           <Box
             className="experience-transition-layer"
             sx={{
               position: 'absolute',
               inset: 0,
               background:
-                'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.065) 5.2% 5.6%, transparent 5.8% 11%)',
-              filter: 'blur(0.5px)',
-            }}
-          />
-          <Box
-            className="experience-transition-streak"
-            sx={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              width: '52vw',
-              height: '5px',
-              transform: 'translate(-50%, -50%)',
-              borderRadius: 999,
-              background:
-                'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.88) 24%, rgba(211, 237, 255, 0.96) 50%, rgba(129, 201, 255, 0.88) 76%, rgba(80, 165, 255, 0) 100%)',
-              boxShadow: '0 0 18px rgba(126, 186, 255, 0.95), 0 0 42px rgba(95, 162, 255, 0.66)',
+                'repeating-linear-gradient(90deg, transparent 0 5%, rgba(78, 218, 255, 0.055) 5.2% 5.6%, transparent 5.8% 11%), repeating-linear-gradient(0deg, transparent 0 7%, rgba(231, 176, 82, 0.028) 7.2% 7.5%, transparent 7.8% 14%)',
             }}
           />
         </Box>
@@ -564,65 +515,88 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                     width: { xs: `${layout.sizeMobile}px`, md: `${layout.sizeDesktop}px` },
                     height: { xs: `${layout.sizeMobile}px`, md: `${layout.sizeDesktop}px` },
                   borderRadius: '50%',
-                  border: 'none',
-                  background: isDark
-                    ? 'radial-gradient(circle at 28% 26%, rgba(176, 227, 255, 0.95), rgba(54, 140, 214, 0.92) 32%, rgba(24, 86, 170, 0.95) 55%, rgba(8, 38, 95, 0.98) 75%, rgba(4, 18, 48, 0.99) 100%)'
-                    : 'radial-gradient(circle at 32% 28%, rgba(252, 255, 255, 0.9), rgba(164, 229, 250, 0.68) 34%, rgba(98, 188, 225, 0.5) 65%, rgba(66, 145, 181, 0.44) 100%)',
-                  color: isDark ? '#f1f6ff' : '#123448',
+                  border: '1px solid rgba(255, 211, 142, 0.3)',
+                  background:
+                    'radial-gradient(circle at 34% 28%, rgba(255, 236, 184, 0.98), rgba(198, 133, 42, 0.96) 28%, rgba(92, 62, 35, 0.98) 57%, rgba(26, 25, 28, 0.98) 75%)',
+                  color: '#fff6dc',
                   px: 1.2,
                   textAlign: 'center',
                   fontWeight: 800,
                   fontSize: { xs: '1rem', md: '1.16rem' },
                   lineHeight: 1.22,
                   cursor: viewState === 'bubbles' ? 'pointer' : 'default',
-                  boxShadow: isDark
-                    ? '0 10px 36px rgba(8, 20, 44, 0.82), inset 0 0 28px rgba(147, 197, 253, 0.16), inset 0 0 0 1px rgba(202, 231, 255, 0.08)'
-                    : '0 12px 28px rgba(76, 146, 170, 0.34), inset 0 0 0 1px rgba(255, 255, 255, 0.45), inset 0 -20px 30px rgba(82, 161, 190, 0.25)',
+                  boxShadow:
+                    '0 18px 48px rgba(1, 4, 12, 0.72), 0 0 34px rgba(255, 176, 65, 0.14), inset 0 0 0 10px rgba(18, 18, 22, 0.42), inset 0 0 0 18px rgba(245, 183, 79, 0.2), inset -18px -22px 30px rgba(0, 0, 0, 0.38), inset 18px 14px 22px rgba(255, 235, 182, 0.18)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
+                  position: 'relative',
+                  isolation: 'isolate',
+                  transformStyle: 'preserve-3d',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
-                    inset: isDark ? '16% 18% auto auto' : '12% 15% auto auto',
-                    width: isDark ? '24%' : '30%',
-                    height: isDark ? '24%' : '30%',
+                    inset: '18%',
                     borderRadius: '50%',
-                    background: isDark ? 'rgba(219, 236, 255, 0.16)' : 'rgba(255, 255, 255, 0.55)',
-                    filter: 'blur(0.4px)',
+                    background:
+                      'repeating-conic-gradient(from 8deg, transparent 0deg 20deg, rgba(255, 232, 176, 0.28) 20deg 24deg), radial-gradient(circle, rgba(19, 18, 22, 0.82) 0 34%, rgba(230, 164, 66, 0.42) 35% 39%, rgba(31, 28, 30, 0.88) 40% 100%)',
+                    border: '1px solid rgba(255, 226, 167, 0.24)',
+                    boxShadow: 'inset 0 0 18px rgba(0,0,0,0.5), 0 0 0 7px rgba(22, 18, 17, 0.36)',
                     zIndex: 1,
                   },
                   '&::after': {
                     content: '""',
                     position: 'absolute',
-                    inset: '6%',
+                    inset: '41%',
                     borderRadius: '50%',
-                    background: isDark
-                      ? 'radial-gradient(38% 24% at 30% 34%, rgba(96, 183, 97, 0.82), transparent 70%), radial-gradient(26% 17% at 43% 51%, rgba(85, 172, 92, 0.78), transparent 72%), radial-gradient(31% 19% at 61% 59%, rgba(79, 164, 88, 0.8), transparent 71%), radial-gradient(22% 14% at 73% 37%, rgba(121, 198, 111, 0.72), transparent 74%), radial-gradient(20% 12% at 66% 28%, rgba(76, 160, 82, 0.74), transparent 76%), radial-gradient(48% 13% at 50% 74%, rgba(233, 248, 255, 0.22), transparent 74%), radial-gradient(36% 9% at 54% 22%, rgba(231, 248, 255, 0.16), transparent 78%)'
-                      : 'none',
-                    opacity: isDark ? 0.82 : 0,
-                    mixBlendMode: isDark ? 'screen' : 'normal',
-                    filter: isDark ? 'blur(0.8px)' : 'none',
+                    background:
+                      'radial-gradient(circle at 35% 28%, rgba(255, 245, 204, 0.94), rgba(215, 151, 50, 0.68) 36%, rgba(20, 18, 20, 0.94) 72%)',
+                    border: '1px solid rgba(255, 238, 190, 0.34)',
+                    boxShadow: '0 0 18px rgba(255, 183, 72, 0.24), inset -8px -8px 12px rgba(0,0,0,0.4)',
                     zIndex: 1,
                   },
                   '&:hover':
                     viewState === 'bubbles'
                       ? {
-                          filter: 'brightness(1.08)',
+                          filter: 'brightness(1.12)',
+                          '& .gear-spin-layer': {
+                            animationDuration: '12s',
+                          },
                         }
                       : undefined,
                 }}
               >
                 <Box
+                  className="gear-spin-layer"
+                  component="span"
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: '50%',
+                    background:
+                      'repeating-conic-gradient(from 0deg, rgba(231, 176, 82, 0.98) 0deg 7deg, rgba(116, 78, 34, 0.95) 7deg 12deg, transparent 12deg 17deg)',
+                    animation: 'experienceGearSpin 28s linear infinite',
+                    zIndex: 0,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      inset: '10%',
+                      borderRadius: '50%',
+                      border: '1px solid rgba(255, 224, 163, 0.18)',
+                      boxShadow: 'inset 0 0 0 10px rgba(6, 5, 7, 0.18)',
+                    },
+                  }}
+                />
+                <Box
                   component="span"
                   sx={{
                     display: 'block',
-                    maxWidth: '76%',
+                    maxWidth: '62%',
                     whiteSpace: 'normal',
                     overflowWrap: 'anywhere',
                     wordBreak: 'break-word',
-                    textShadow: isDark ? '0 1px 10px rgba(7, 18, 42, 0.5)' : '0 1px 8px rgba(231, 249, 255, 0.6)',
+                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.82), 0 0 14px rgba(255, 184, 86, 0.36)',
                     position: 'relative',
                     zIndex: 2,
                     fontWeight: 800,
@@ -643,29 +617,16 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               position: 'absolute',
               inset: '-8%',
               pointerEvents: 'none',
-              background: 'radial-gradient(circle at 50% 50%, rgba(179, 209, 255, 0.25), rgba(34, 65, 123, 0.52) 32%, rgba(7, 14, 29, 0.94) 66%)',
-              mixBlendMode: 'screen',
+              background: 'linear-gradient(120deg, rgba(2, 7, 10, 0.08), rgba(70, 198, 178, 0.09), rgba(2, 7, 10, 0.08))',
+              mixBlendMode: 'normal',
               '&::before': {
                 content: '""',
                 position: 'absolute',
                 inset: 0,
                 background:
-                  'repeating-linear-gradient(90deg, transparent 0 5%, rgba(223, 237, 255, 0.05) 5.2% 5.6%, transparent 5.8% 11%)',
+                  'repeating-linear-gradient(90deg, transparent 0 5%, rgba(78, 218, 255, 0.06) 5.2% 5.6%, transparent 5.8% 11%)',
                 transformOrigin: 'center',
                 filter: 'blur(0.4px)',
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                width: '40%',
-                height: '4px',
-                transform: 'translate(-50%, -50%)',
-                borderRadius: 999,
-                background:
-                  'linear-gradient(90deg, rgba(80, 165, 255, 0) 0%, rgba(129, 201, 255, 0.85) 24%, rgba(211, 237, 255, 0.95) 50%, rgba(129, 201, 255, 0.85) 76%, rgba(80, 165, 255, 0) 100%)',
-                boxShadow: '0 0 14px rgba(126, 186, 255, 0.9), 0 0 32px rgba(95, 162, 255, 0.62)',
               },
             }}
           />
@@ -683,8 +644,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 aspectRatio: '1',
                 pointerEvents: 'none',
                 borderRadius: '50%',
-                border: '1px solid rgba(170, 206, 255, 0.42)',
-                boxShadow: '0 0 24px rgba(131, 184, 255, 0.45), inset 0 0 24px rgba(123, 171, 242, 0.22)',
+                border: '1px solid rgba(78, 218, 255, 0.2)',
               }}
             />
             <Box
@@ -697,9 +657,9 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 aspectRatio: '1',
                 pointerEvents: 'none',
                 transform: 'translate(-50%, -50%)',
-                mixBlendMode: 'screen',
+                mixBlendMode: 'normal',
                 background:
-                  'radial-gradient(circle at 52% 48%, rgba(255, 224, 188, 0.24), rgba(255, 159, 109, 0.18) 20%, rgba(255, 104, 66, 0.12) 34%, rgba(94, 142, 230, 0.08) 56%, rgba(0,0,0,0) 72%)',
+                  'repeating-linear-gradient(90deg, rgba(78, 218, 255, 0.055) 0 2px, transparent 2px 18px), repeating-linear-gradient(0deg, rgba(78, 218, 255, 0.04) 0 1px, transparent 1px 14px)',
               }}
             />
             <Box
@@ -713,7 +673,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                 pointerEvents: 'none',
                 transform: 'translate(-50%, -50%)',
                 background:
-                  'conic-gradient(from 0deg, rgba(185, 222, 255, 0.18) 0deg 6deg, transparent 6deg 45deg, rgba(185, 222, 255, 0.18) 45deg 51deg, transparent 51deg 90deg, rgba(185, 222, 255, 0.18) 90deg 96deg, transparent 96deg 135deg, rgba(185, 222, 255, 0.18) 135deg 141deg, transparent 141deg 180deg, rgba(185, 222, 255, 0.18) 180deg 186deg, transparent 186deg 225deg, rgba(185, 222, 255, 0.18) 225deg 231deg, transparent 231deg 270deg, rgba(185, 222, 255, 0.18) 270deg 276deg, transparent 276deg 315deg, rgba(185, 222, 255, 0.18) 315deg 321deg, transparent 321deg 360deg)',
+                  'conic-gradient(from 0deg, rgba(78, 218, 255, 0.2) 0deg 6deg, transparent 6deg 45deg, rgba(231, 176, 82, 0.18) 45deg 51deg, transparent 51deg 90deg, rgba(78, 218, 255, 0.2) 90deg 96deg, transparent 96deg 135deg, rgba(231, 176, 82, 0.18) 135deg 141deg, transparent 141deg 180deg, rgba(78, 218, 255, 0.2) 180deg 186deg, transparent 186deg 225deg, rgba(231, 176, 82, 0.18) 225deg 231deg, transparent 231deg 270deg, rgba(78, 218, 255, 0.2) 270deg 276deg, transparent 276deg 315deg, rgba(231, 176, 82, 0.18) 315deg 321deg, transparent 321deg 360deg)',
                 filter: 'blur(0.5px)',
               }}
             />

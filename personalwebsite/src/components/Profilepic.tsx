@@ -33,7 +33,7 @@ function ProfileAvatar(): JSX.Element {
           <Box
             sx={{
               p: { xs: 2.5, md: 3.2 },
-              borderRadius: 5,
+              borderRadius: 2,
               border: '1px solid var(--panel-border)',
               background: 'var(--panel-bg-soft)',
               boxShadow: 'var(--panel-shadow)',
@@ -62,8 +62,8 @@ function ProfileAvatar(): JSX.Element {
                     px: 1.2,
                     py: 0.5,
                     borderRadius: 999,
-                    background: 'rgba(34, 211, 238, 0.14)',
-                    border: '1px solid rgba(14, 165, 164, 0.35)',
+                    background: 'rgba(184, 121, 39, 0.18)',
+                    border: '1px solid rgba(231, 176, 82, 0.35)',
                     fontWeight: 700,
                     fontSize: '0.84rem',
                     color: 'var(--ink-900)',
@@ -84,7 +84,8 @@ function ProfileAvatar(): JSX.Element {
                   borderRadius: 999,
                   textTransform: 'none',
                   fontWeight: 700,
-                  background: 'linear-gradient(120deg, var(--violet-500), var(--teal-500))',
+                  background: 'linear-gradient(120deg, var(--accent-700), var(--accent-800))',
+                  color: '#1a1209',
                 }}
               >
                 LinkedIn
@@ -96,7 +97,7 @@ function ProfileAvatar(): JSX.Element {
                 variant="outlined"
                 startIcon={<GitHubIcon />}
                 sx={{
-                  borderRadius: 999,
+                  borderRadius: 1.5,
                   textTransform: 'none',
                   fontWeight: 700,
                   borderColor: 'var(--panel-border)',
@@ -120,8 +121,8 @@ function ProfileAvatar(): JSX.Element {
               sx={{
                 width: { xs: 200, sm: 230, md: 280, lg: 300 },
                 height: { xs: 200, sm: 230, md: 280, lg: 300 },
-                border: '8px solid rgba(168, 189, 255, 0.45)',
-                boxShadow: '0 36px 66px rgba(10, 21, 36, 0.35)',
+                border: '8px solid rgba(231, 176, 82, 0.42)',
+                boxShadow: '0 36px 66px rgba(0, 0, 0, 0.45)',
               }}
             />
           </Box>

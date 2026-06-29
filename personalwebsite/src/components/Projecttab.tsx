@@ -40,13 +40,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
         textAlign: 'left',
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: 3,
-        border: '1px solid rgba(99, 102, 241, 0.2)',
+        borderRadius: 1.5,
+        border: '1px solid rgba(231, 176, 82, 0.22)',
         background: 'var(--panel-bg)',
         boxShadow: '0 18px 32px rgba(1, 4, 12, 0.46)',
         transformStyle: 'preserve-3d',
         '&:hover': {
-          boxShadow: '0 24px 42px rgba(15, 33, 55, 0.18)',
+          boxShadow: '0 24px 42px rgba(0, 0, 0, 0.36)',
         },
         '&::before': {
           content: '""',
@@ -54,14 +54,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index }) => {
           inset: 0,
           pointerEvents: 'none',
           background:
-            'radial-gradient(220px circle at var(--px, 50%) var(--py, 50%), rgba(255, 255, 255, 0.42), transparent 64%)',
+            'radial-gradient(220px circle at var(--px, 50%) var(--py, 50%), rgba(255, 218, 143, 0.24), transparent 64%)',
         },
       }}
     >
       <Typography sx={{ color: 'var(--teal-500)', fontWeight: 700, mb: 0.8 }}>
         {project.category}
       </Typography>
-      <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 800,
+          mb: 1,
+          color: 'var(--ink-900)',
+          textShadow: '0 0 16px rgba(242, 180, 95, 0.16)',
+        }}
+      >
         {project.name}
       </Typography>
       <Typography sx={{ color: 'var(--ink-700)', mb: 1.25 }}>
@@ -114,17 +122,17 @@ export default function RecentProjects() {
           gap: 1.25,
           flexWrap: 'wrap',
           '& .MuiButton-root': {
-            borderRadius: '20px',
+            borderRadius: '8px',
             textTransform: 'none',
             px: 3,
-            borderColor: 'rgba(15, 33, 55, 0.28)',
+            borderColor: 'var(--panel-border)',
             color: 'var(--ink-900)',
             background: 'var(--panel-bg-soft)',
             fontWeight: 700,
           },
           '& .MuiButton-root.Mui-selected': {
-            background: 'linear-gradient(120deg, var(--accent-700), var(--violet-500))',
-            color: '#fff',
+            background: 'linear-gradient(120deg, var(--accent-700), var(--accent-800))',
+            color: '#1a1209',
             borderColor: 'transparent',
             '&:hover': {
               opacity: 0.93,

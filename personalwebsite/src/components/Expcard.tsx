@@ -41,13 +41,13 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
           width: '100%',
           position: 'relative',
           overflow: 'hidden',
-          borderRadius: 3,
-          borderColor: 'rgba(99, 102, 241, 0.18)',
+          borderRadius: 1.5,
+          borderColor: 'rgba(231, 176, 82, 0.18)',
           background: 'var(--panel-bg)',
           boxShadow: '0 18px 40px rgba(1, 4, 12, 0.5)',
           transformStyle: 'preserve-3d',
           '&:hover': {
-            boxShadow: '0 24px 52px rgba(15, 33, 55, 0.18)',
+            boxShadow: '0 24px 52px rgba(0, 0, 0, 0.36)',
           },
           '&::before': {
             content: '""',
@@ -55,7 +55,7 @@ const OutlinedCard: React.FC<OutlinedCardProps> = ({
             inset: 0,
             pointerEvents: 'none',
             background:
-              'radial-gradient(190px circle at var(--px, 50%) var(--py, 50%), rgba(255, 255, 255, 0.32), transparent 66%)',
+              'radial-gradient(190px circle at var(--px, 50%) var(--py, 50%), rgba(255, 218, 143, 0.22), transparent 66%)',
           },
         }}
       >

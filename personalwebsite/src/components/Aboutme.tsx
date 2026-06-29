@@ -36,7 +36,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             elevation={0}
             sx={{
               p: 2.2,
-              borderRadius: 4,
+              borderRadius: 2,
               background: 'var(--panel-bg-soft)',
               border: '1px solid var(--panel-border)',
               boxShadow: 'var(--panel-shadow)',
@@ -50,7 +50,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 width: '100%',
                 height: 'auto',
                 maxWidth: '100%',
-                borderRadius: 3,
+                borderRadius: 1.5,
                 transform: 'rotate(-1deg)',
                 filter: 'saturate(1.06)',
               }}
@@ -87,9 +87,10 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                       py: 2.2,
                       px: 2,
                       background: `linear-gradient(145deg, ${primaryColor}, var(--violet-500))`,
-                      color: '#f8fafc',
-                      borderRadius: 3.2,
-                      boxShadow: '0 18px 34px rgba(5, 14, 27, 0.2)',
+                      color: '#fff6dc',
+                      borderRadius: 1.5,
+                      border: '1px solid rgba(231, 176, 82, 0.28)',
+                      boxShadow: '0 18px 34px rgba(0, 0, 0, 0.34), inset 0 0 18px rgba(255, 218, 143, 0.08)',
                       minHeight: { xs: 120, sm: `${Math.round(170 * stat.level)}px` },
                       '&:hover': {
                         transform: 'translateY(-6px)',
@@ -127,8 +128,8 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                   sx={{
                     p: 2,
                     mb: 1.5,
-                    borderRadius: 3,
-                    border: '1px solid rgba(99, 102, 241, 0.16)',
+                    borderRadius: 1.5,
+                    border: '1px solid rgba(231, 176, 82, 0.18)',
                     background: 'var(--panel-bg)',
                   }}
                 >
@@ -156,11 +157,11 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                   sx={{
                     px: 1.4,
                     py: 0.7,
-                    borderRadius: 999,
+                    borderRadius: 1.5,
                     fontWeight: 700,
                     fontSize: '0.85rem',
                     color: 'var(--ink-900)',
-                    border: '1px solid rgba(14, 165, 164, 0.28)',
+                    border: '1px solid rgba(231, 176, 82, 0.28)',
                     background: 'var(--panel-bg)',
                   }}
                 >
@@ -173,11 +174,11 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
             <Button
               variant="contained"
               sx={{
-                background: `linear-gradient(120deg, ${buttonColor}, var(--accent-600))`,
-                color: '#fff',
+                background: `linear-gradient(120deg, ${buttonColor}, var(--accent-800))`,
+                color: '#1a1209',
                 px: 3.5,
                 py: 1.4,
-                borderRadius: 999,
+                borderRadius: 1.5,
                 fontWeight: 700,
                 textTransform: 'none',
                 boxShadow: '0 16px 30px rgba(180, 83, 9, 0.35)',

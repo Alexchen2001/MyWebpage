@@ -34,10 +34,10 @@ const BlogSection: React.FC = () => {
           flexWrap: 'wrap',
           gap: 1,
           '& .MuiButton-root': {
-            borderRadius: 999,
+            borderRadius: 1.5,
             textTransform: 'none',
             fontWeight: 700,
-            borderColor: 'rgba(99, 102, 241, 0.35)',
+            borderColor: 'rgba(231, 176, 82, 0.36)',
             color: 'var(--ink-900)',
             background: 'var(--panel-bg-soft)',
           },
@@ -58,8 +58,8 @@ const BlogSection: React.FC = () => {
             sx={
               selectedCategory === category
                 ? {
-                    background: 'linear-gradient(120deg, var(--accent-700), var(--violet-500))',
-                    color: '#fff',
+                    background: 'linear-gradient(120deg, var(--accent-700), var(--accent-800))',
+                    color: '#1a1209',
                     borderColor: 'transparent',
                   }
                 : undefined
@@ -76,10 +76,10 @@ const BlogSection: React.FC = () => {
             elevation={0}
             sx={{
               p: 1.5,
-              borderRadius: 3,
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              borderRadius: 1.5,
+              border: '1px solid rgba(231, 176, 82, 0.22)',
               background: 'var(--panel-bg)',
-              boxShadow: '0 18px 35px rgba(1, 4, 12, 0.28)',
+              boxShadow: '0 18px 35px rgba(0, 0, 0, 0.38)',
               maxHeight: 420,
               overflowY: 'auto',
             }}
@@ -95,15 +95,15 @@ const BlogSection: React.FC = () => {
                   fontWeight: 700,
                   mb: 0.6,
                   borderRadius: 1.5,
-                  color: selectedCourse === item.code ? '#fff' : 'var(--ink-900)',
+                  color: selectedCourse === item.code ? '#1a1209' : 'var(--ink-900)',
                   background:
                     selectedCourse === item.code
-                      ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
+                      ? 'linear-gradient(120deg, var(--accent-700), var(--accent-800))'
                       : 'var(--course-button-bg)',
                   '&:hover': {
                     background:
                       selectedCourse === item.code
-                        ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
+                        ? 'linear-gradient(120deg, var(--accent-700), var(--accent-800))'
                         : 'var(--course-button-bg-hover)',
                   },
                 }}
@@ -117,13 +117,21 @@ const BlogSection: React.FC = () => {
             elevation={0}
             sx={{
               p: 2.5,
-              borderRadius: 3,
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              borderRadius: 1.5,
+              border: '1px solid rgba(231, 176, 82, 0.22)',
               background: 'var(--panel-bg)',
-              boxShadow: '0 18px 35px rgba(1, 4, 12, 0.28)',
+              boxShadow: '0 18px 35px rgba(0, 0, 0, 0.38)',
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 800,
+                mb: 1,
+                color: 'var(--ink-900)',
+                textShadow: '0 0 16px rgba(242, 180, 95, 0.16)',
+              }}
+            >
               {selectedCourseReflection?.code} - {selectedCourseReflection?.course}
             </Typography>
             <Typography sx={{ color: 'var(--ink-700)' }}>{selectedCourseReflection?.reflection}</Typography>
@@ -135,10 +143,10 @@ const BlogSection: React.FC = () => {
             elevation={0}
             sx={{
               p: 1.5,
-              borderRadius: 3,
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              borderRadius: 1.5,
+              border: '1px solid rgba(231, 176, 82, 0.22)',
               background: 'var(--panel-bg)',
-              boxShadow: '0 18px 35px rgba(1, 4, 12, 0.28)',
+              boxShadow: '0 18px 35px rgba(0, 0, 0, 0.38)',
               maxHeight: 420,
               overflowY: 'auto',
             }}
@@ -154,15 +162,15 @@ const BlogSection: React.FC = () => {
                   fontWeight: 700,
                   mb: 0.6,
                   borderRadius: 1.5,
-                  color: selectedGeorgiaCourse === item.code ? '#fff' : 'var(--ink-900)',
+                  color: selectedGeorgiaCourse === item.code ? '#1a1209' : 'var(--ink-900)',
                   background:
                     selectedGeorgiaCourse === item.code
-                      ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
+                      ? 'linear-gradient(120deg, var(--accent-700), var(--accent-800))'
                       : 'var(--course-button-bg)',
                   '&:hover': {
                     background:
                       selectedGeorgiaCourse === item.code
-                        ? 'linear-gradient(120deg, var(--accent-700), var(--violet-500))'
+                        ? 'linear-gradient(120deg, var(--accent-700), var(--accent-800))'
                         : 'var(--course-button-bg-hover)',
                   },
                 }}
@@ -176,13 +184,21 @@ const BlogSection: React.FC = () => {
             elevation={0}
             sx={{
               p: 2.5,
-              borderRadius: 3,
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              borderRadius: 1.5,
+              border: '1px solid rgba(231, 176, 82, 0.22)',
               background: 'var(--panel-bg)',
-              boxShadow: '0 18px 35px rgba(1, 4, 12, 0.28)',
+              boxShadow: '0 18px 35px rgba(0, 0, 0, 0.38)',
             }}
           >
-            <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 800,
+                mb: 1,
+                color: 'var(--ink-900)',
+                textShadow: '0 0 16px rgba(242, 180, 95, 0.16)',
+              }}
+            >
               {selectedGeorgiaCourseItem?.code} - {selectedGeorgiaCourseItem?.course}
             </Typography>
           </Paper>
@@ -201,13 +217,21 @@ const BlogSection: React.FC = () => {
               elevation={0}
               sx={{
                 p: 2.5,
-                borderRadius: 3,
-                border: '1px solid rgba(99, 102, 241, 0.2)',
+                borderRadius: 1.5,
+                border: '1px solid rgba(231, 176, 82, 0.22)',
                 background: 'var(--panel-bg)',
-                boxShadow: '0 18px 35px rgba(1, 4, 12, 0.28)',
+                boxShadow: '0 18px 35px rgba(0, 0, 0, 0.38)',
               }}
             >
-              <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 800,
+                  mb: 1,
+                  color: 'var(--ink-900)',
+                  textShadow: '0 0 16px rgba(242, 180, 95, 0.16)',
+                }}
+              >
                 {post.title}
               </Typography>
               <Typography sx={{ color: 'var(--ink-700)', mb: 2 }}>{post.excerpt}</Typography>

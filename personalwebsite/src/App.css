@@ -140,7 +140,7 @@
   pointer-events: none;
   border-radius: 50%;
   z-index: 2;
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.24) 0%, rgba(34, 211, 238, 0.16) 42%, rgba(251, 113, 133, 0.12) 62%, transparent 78%);
+  background: radial-gradient(circle, rgba(242, 180, 95, 0.22) 0%, rgba(184, 121, 39, 0.16) 42%, rgba(127, 45, 29, 0.12) 62%, transparent 78%);
   filter: blur(20px);
 }
 
@@ -181,7 +181,7 @@
 }
 
 .orb-a {
-  background: #818cf8;
+  background: #b87927;
   left: -8rem;
   top: -10rem;
   transform: translate(
@@ -191,7 +191,7 @@
 }
 
 .orb-b {
-  background: #fb7185;
+  background: #7f2d1d;
   right: -8rem;
   top: 30%;
   transform: translate(
@@ -206,11 +206,17 @@
   z-index: 1;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(200, 215, 255, var(--grid-opacity)) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 215, 255, var(--grid-opacity)) 1px, transparent 1px);
+    linear-gradient(rgba(231, 176, 82, var(--grid-opacity)) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(231, 176, 82, var(--grid-opacity)) 1px, transparent 1px);
   background-size: 44px 44px;
   mask-image: radial-gradient(circle at 52% 42%, black, transparent 76%);
   transform: translateY(calc(var(--scroll-y, 0px) * -0.018));
+}
+
+@keyframes experienceGearSpin {
+  to {
+    rotate: 360deg;
+  }
 }
 
 @media (max-width: 768px) {
@@ -225,6 +231,12 @@
 
   .hero-section {
     padding-top: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track-bubble {
+    animation: none !important;
   }
 }
 
