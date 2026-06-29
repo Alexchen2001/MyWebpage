@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mechanical Gear Wheel World</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #030303;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      #scene {
+        position: fixed;
+        inset: 0;
+      }
+
+      .vignette {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 52% 42%, transparent 0 38%, rgba(0, 0, 0, 0.25) 62%, rgba(0, 0, 0, 0.82) 100%),
+          linear-gradient(90deg, rgba(0, 0, 0, 0.38), transparent 24% 70%, rgba(0, 0, 0, 0.48));
+        mix-blend-mode: multiply;
+      }
+
+      .grain {
+        position: fixed;
+        inset: -50%;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.075;
+        background-image:
+          radial-gradient(circle at 20% 30%, #fff 0 1px, transparent 1px),
+          radial-gradient(circle at 70% 60%, #fff 0 1px, transparent 1px);
+        background-size: 3px 3px, 5px 5px;
+        animation: grainShift 0.55s steps(2, end) infinite;
+      }
+
+      @keyframes grainShift {
+        from {
+          transform: translate3d(-2%, 1%, 0);
+        }
+
+        to {
+          transform: translate3d(2%, -1%, 0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene"></div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+    <script type="module">
+      import * as THREE from "https://esm.sh/three@0.164.1";
+      import { OrbitControls } from "https://esm.sh/three@0.164.1/examples/jsm/controls/OrbitControls.js";
+      import { EffectComposer } from "https://esm.sh/three@0.164.1/examples/jsm/postprocessing/EffectComposer.js";
+      import { RenderPass } from "https://esm.sh/three@0.164.1/examples/jsm/postprocessing/RenderPass.js";
+      import { UnrealBloomPass } from "https://esm.sh/three@0.164.1/examples/jsm/postprocessing/UnrealBloomPass.js";
+      import { OutputPass } from "https://esm.sh/three@0.164.1/examples/jsm/postprocessing/OutputPass.js";
+
+      const mount = document.getElementById("scene");
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030303);
+      scene.fog = new THREE.FogExp2(0x070504, 0.021);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.18;
+      mount.appendChild(renderer.domElement);
+
+      const camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 240);
+      camera.position.set(-10, -12, 34);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enabled = false;
+      controls.target.set(0, 0, 0);
+
+      const composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+
+      const bloom = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        0.72,
+        0.55,
+        0.18
+      );
+      composer.addPass(bloom);
+      composer.addPass(new OutputPass());
+
+      const clock = new THREE.Clock();
+      const gearRig = new THREE.Group();
+      gearRig.rotation.x = -0.42;
+      gearRig.rotation.z = -0.1;
+      scene.add(gearRig);
+
+      const brass = new THREE.MeshPhysicalMaterial({
+        color: 0xb87927,
+        metalness: 1,
+        roughness: 0.34,
+        clearcoat: 0.26,
+        clearcoatRoughness: 0.62,
+        envMapIntensity: 0.9
+      });
+
+      const agedBrass = new THREE.MeshPhysicalMaterial({
+        color: 0x87601f,
+        metalness: 1,
+        roughness: 0.5,
+        clearcoat: 0.18,
+        clearcoatRoughness: 0.8,
+        envMapIntensity: 0.7
+      });
+
+      const steel = new THREE.MeshPhysicalMaterial({
+        color: 0x8d9291,
+        metalness: 1,
+        roughness: 0.29,
+        clearcoat: 0.22,
+        clearcoatRoughness: 0.58,
+        envMapIntensity: 1
+      });
+
+      const darkIron = new THREE.MeshPhysicalMaterial({
+        color: 0x171514,
+        metalness: 1,
+        roughness: 0.62,
+        clearcoat: 0.08,
+        envMapIntensity: 0.5
+      });
+
+      const glowMaterial = new THREE.MeshBasicMaterial({ color: 0xff7a1a });
+      const emberMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff9b2f,
+        transparent: true,
+        opacity: 0.48,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      function createGearGeometry({ teeth, pitchRadius, toothDepth, thickness, boreRadius }) {
+        const rootRadius = pitchRadius - toothDepth * 0.48;
+        const outerRadius = pitchRadius + toothDepth * 0.52;
+        const steps = teeth * 4;
+        const shape = new THREE.Shape();
+        const hole = new THREE.Path();
+
+        for (let i = 0; i <= steps; i += 1) {
+          const phase = i % 4;
+          const angle = (i / steps) * Math.PI * 2;
+          const flank = phase === 1 || phase === 2;
+          const radius = flank ? outerRadius : rootRadius;
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+
+          if (i === 0) {
+            shape.moveTo(x, y);
+          } else {
+            shape.lineTo(x, y);
+          }
+        }
+
+        hole.absarc(0, 0, boreRadius, 0, Math.PI * 2, true);
+        shape.holes.push(hole);
+
+        const geometry = new THREE.ExtrudeGeometry(shape, {
+          depth: thickness,
+          bevelEnabled: true,
+          bevelThickness: Math.min(0.18, thickness * 0.12),
+          bevelSize: Math.min(0.16, toothDepth * 0.28),
+          bevelSegments: 4,
+          curveSegments: 16
+        });
+
+        geometry.center();
+        geometry.computeVertexNormals();
+        return geometry;
+      }
+
+      function createHub(radius, thickness, material) {
+        const group = new THREE.Group();
+        const hubGeometry = new THREE.CylinderGeometry(radius * 0.42, radius * 0.42, thickness * 1.35, 56, 1, false);
+        const capGeometry = new THREE.CylinderGeometry(radius * 0.24, radius * 0.24, thickness * 1.6, 48, 1, false);
+        const axleGeometry = new THREE.CylinderGeometry(radius * 0.08, radius * 0.08, thickness * 3.2, 32, 1, false);
+
+        [hubGeometry, capGeometry, axleGeometry].forEach((geometry) => {
+          geometry.rotateX(Math.PI / 2);
+        });
+
+        const hub = new THREE.Mesh(hubGeometry, material);
+        const cap = new THREE.Mesh(capGeometry, material);
+        const axle = new THREE.Mesh(axleGeometry, darkIron);
+        hub.castShadow = true;
+        hub.receiveShadow = true;
+        cap.castShadow = true;
+        cap.receiveShadow = true;
+        axle.castShadow = true;
+        axle.receiveShadow = true;
+
+        group.add(hub, cap, axle);
+        return group;
+      }
+
+      function addSpokes(group, radius, thickness, count, material) {
+        const spokeGeometry = new THREE.BoxGeometry(radius * 0.72, radius * 0.045, thickness * 1.1);
+
+        for (let i = 0; i < count; i += 1) {
+          const spoke = new THREE.Mesh(spokeGeometry, material);
+          spoke.rotation.z = (i / count) * Math.PI * 2;
+          spoke.castShadow = true;
+          spoke.receiveShadow = true;
+          group.add(spoke);
+        }
+      }
+
+      function addMotionMarkers(group, radius, thickness) {
+        const markerGeometry = new THREE.SphereGeometry(Math.max(0.08, radius * 0.045), 16, 10);
+        const markerMaterial = new THREE.MeshBasicMaterial({
+          color: 0xffd081,
+          transparent: true,
+          opacity: 0.95
+        });
+
+        for (let i = 0; i < 3; i += 1) {
+          const angle = i * ((Math.PI * 2) / 3) + 0.18;
+          const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+          marker.position.set(Math.cos(angle) * radius * 0.7, Math.sin(angle) * radius * 0.7, thickness * 0.68);
+          marker.userData.pulseOffset = i * 0.6;
+          group.add(marker);
+        }
+      }
+
+      const gearBlueprints = [
+        { id: "A", teeth: 42, r: 5.6, d: 0.82, t: 1.35, x: 0, y: 0, z: 0, mat: brass, speed: 0.52 },
+        { id: "B", teeth: 24, r: 3.2, d: 0.62, t: 1.05, parent: "A", angle: 0, z: 0.3, mat: steel },
+        { id: "C", teeth: 34, r: 4.53, d: 0.72, t: 1.2, parent: "A", angle: 50, z: -0.22, mat: agedBrass },
+        { id: "D", teeth: 18, r: 2.4, d: 0.54, t: 0.9, parent: "A", angle: 180, z: 0.2, mat: darkIron },
+        { id: "E", teeth: 30, r: 4.0, d: 0.7, t: 1.12, parent: "A", angle: 240, z: -0.38, mat: steel },
+        { id: "F", teeth: 20, r: 2.66, d: 0.55, t: 0.86, parent: "B", angle: 62, z: -0.1, mat: brass },
+        { id: "G", teeth: 16, r: 2.13, d: 0.5, t: 0.8, parent: "D", angle: 225, z: 0.42, mat: agedBrass },
+        { id: "H", teeth: 52, r: 6.93, d: 0.95, t: 1.55, parent: "C", angle: 100, z: -1.1, mat: darkIron },
+        { id: "I", teeth: 28, r: 3.73, d: 0.68, t: 1, parent: "B", angle: -45, z: -0.68, mat: agedBrass },
+        { id: "J", teeth: 22, r: 2.93, d: 0.58, t: 0.92, parent: "D", angle: 155, z: -0.52, mat: steel }
+      ];
+
+      const blueprintMap = new Map();
+      for (const data of gearBlueprints) {
+        blueprintMap.set(data.id, data);
+      }
+
+      for (const data of gearBlueprints) {
+        if (!data.parent) {
+          continue;
+        }
+
+        const parent = blueprintMap.get(data.parent);
+        const angle = THREE.MathUtils.degToRad(data.angle);
+        const centerDistance = parent.r + data.r;
+        data.x = parent.x + Math.cos(angle) * centerDistance;
+        data.y = parent.y + Math.sin(angle) * centerDistance;
+      }
+
+      const gearMap = new Map();
+      const gears = [];
+
+      function createGear(data, { markers = true, spokes = true } = {}) {
+        const gear = new THREE.Group();
+        const body = new THREE.Mesh(
+          createGearGeometry({
+            teeth: data.teeth,
+            pitchRadius: data.r,
+            toothDepth: data.d,
+            thickness: data.t,
+            boreRadius: data.r * 0.22
+          }),
+          data.mat
+        );
+
+        body.castShadow = true;
+        body.receiveShadow = true;
+        gear.add(body);
+        gear.add(createHub(data.r, data.t, data.mat));
+
+        if (spokes) {
+          addSpokes(gear, data.r, data.t, data.teeth > 34 ? 10 : 8, data.mat);
+        }
+
+        if (markers) {
+          addMotionMarkers(gear, data.r, data.t);
+        }
+
+        gear.position.set(data.x, data.y, data.z);
+        gear.userData = {
+          teeth: data.teeth,
+          radius: data.r,
+          phase: Math.atan2(data.y, data.x),
+          startRotation: data.startRotation ?? (data.parent ? THREE.MathUtils.degToRad(data.angle) * 0.5 : 0),
+          speed: data.speed ?? 0
+        };
+        gear.rotation.z = gear.userData.startRotation;
+
+        gearRig.add(gear);
+        gears.push(gear);
+        return gear;
+      }
+
+      for (const data of gearBlueprints) {
+        const gear = createGear(data);
+        gearMap.set(data.id, gear);
+      }
+
+      const gearLinks = [
+        ["A", "B"],
+        ["A", "C"],
+        ["A", "D"],
+        ["A", "E"],
+        ["B", "F"],
+        ["B", "I"],
+        ["D", "G"],
+        ["D", "J"],
+        ["C", "H"]
+      ];
+
+      for (const [fromId, toId] of gearLinks) {
+        const from = gearMap.get(fromId);
+        const to = gearMap.get(toId);
+        to.userData.speed = -from.userData.speed * (from.userData.teeth / to.userData.teeth);
+      }
+
+      function addBeltOrRod(startId, endId, radius = 0.045) {
+        const start = gearMap.get(startId).position;
+        const end = gearMap.get(endId).position;
+        const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+        const distance = start.distanceTo(end);
+        const geometry = new THREE.CylinderGeometry(radius, radius, distance, 12);
+        geometry.rotateZ(Math.PI / 2);
+        const rod = new THREE.Mesh(geometry, darkIron);
+        rod.position.copy(mid);
+        rod.rotation.z = Math.atan2(end.y - start.y, end.x - start.x);
+        rod.position.z -= 0.95;
+        rod.castShadow = true;
+        rod.receiveShadow = true;
+        gearRig.add(rod);
+      }
+
+      gearLinks.forEach(([a, b]) => addBeltOrRod(a, b, 0.035));
+
+      const massiveLayerBlueprints = [
+        { teeth: 72, r: 9.6, d: 1.15, t: 1.9, x: -16.5, y: 15.2, z: -7.5, mat: darkIron, speed: 0.18, startRotation: 0.3 },
+        { teeth: 64, r: 8.53, d: 1.05, t: 1.7, x: 15.8, y: 14.5, z: -8.8, mat: agedBrass, speed: -0.2, startRotation: 1.1 },
+        { teeth: 82, r: 10.93, d: 1.25, t: 2.1, x: 2.4, y: -18.5, z: -9.8, mat: steel, speed: 0.16, startRotation: -0.8 },
+        { teeth: 96, r: 12.8, d: 1.4, t: 2.4, x: -24.0, y: -12.6, z: -14.0, mat: darkIron, speed: -0.12, startRotation: 0.7 },
+        { teeth: 88, r: 11.73, d: 1.35, t: 2.2, x: 24.5, y: -10.8, z: -13.0, mat: brass, speed: 0.14, startRotation: -0.2 },
+        { teeth: 54, r: 7.2, d: 0.98, t: 1.45, x: -20.5, y: 1.0, z: 4.6, mat: agedBrass, speed: -0.28, startRotation: 1.8 },
+        { teeth: 48, r: 6.4, d: 0.9, t: 1.3, x: 20.8, y: 1.9, z: 5.4, mat: steel, speed: 0.31, startRotation: 0.4 }
+      ];
+
+      massiveLayerBlueprints.forEach((data) => {
+        const gear = createGear(data, { markers: data.z > 0, spokes: true });
+        gear.scale.setScalar(data.z < -10 ? 1.08 : 1);
+      });
+
+      const backPlate = new THREE.Mesh(
+        new THREE.CylinderGeometry(38, 38, 0.55, 160),
+        new THREE.MeshPhysicalMaterial({
+          color: 0x0f0c0a,
+          metalness: 1,
+          roughness: 0.74,
+          clearcoat: 0.08
+        })
+      );
+      backPlate.rotation.x = Math.PI / 2;
+      backPlate.position.z = -2.25;
+      backPlate.receiveShadow = true;
+      gearRig.add(backPlate);
+
+      const ringGeometry = new THREE.TorusGeometry(17.6, 0.055, 10, 180);
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        color: 0xc78636,
+        transparent: true,
+        opacity: 0.38,
+        blending: THREE.AdditiveBlending
+      });
+
+      for (let i = 0; i < 4; i += 1) {
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.scale.setScalar(0.72 + i * 0.16);
+        ring.position.z = -1.85 - i * 0.12;
+        gearRig.add(ring);
+      }
+
+      const outerRingGeometry = new THREE.TorusGeometry(29, 0.09, 12, 220);
+      for (let i = 0; i < 5; i += 1) {
+        const ring = new THREE.Mesh(outerRingGeometry, ringMaterial);
+        ring.scale.setScalar(0.86 + i * 0.08);
+        ring.position.z = -8 - i * 1.3;
+        ring.rotation.z = i * 0.18;
+        gearRig.add(ring);
+      }
+
+      function addPipe(angle, length, offset) {
+        const geometry = new THREE.CylinderGeometry(0.08, 0.08, length, 14);
+        const pipe = new THREE.Mesh(geometry, darkIron);
+        pipe.rotation.z = angle;
+        pipe.rotation.x = Math.PI / 2;
+        pipe.position.set(Math.cos(angle) * offset, Math.sin(angle) * offset, -1.55);
+        pipe.castShadow = true;
+        pipe.receiveShadow = true;
+        gearRig.add(pipe);
+      }
+
+      for (let i = 0; i < 34; i += 1) {
+        addPipe((i / 34) * Math.PI * 2, 19 + Math.sin(i) * 8, 5.5 + (i % 5) * 3.2);
+      }
+
+      const ambient = new THREE.AmbientLight(0x4c4238, 0.48);
+      scene.add(ambient);
+
+      const key = new THREE.DirectionalLight(0xffdfb0, 3.4);
+      key.position.set(-10, -14, 28);
+      key.castShadow = true;
+      key.shadow.mapSize.set(2048, 2048);
+      key.shadow.camera.near = 1;
+      key.shadow.camera.far = 80;
+      key.shadow.camera.left = -28;
+      key.shadow.camera.right = 28;
+      key.shadow.camera.top = 28;
+      key.shadow.camera.bottom = -28;
+      scene.add(key);
+
+      const coldRim = new THREE.DirectionalLight(0x92c9ff, 1.2);
+      coldRim.position.set(18, 10, 18);
+      scene.add(coldRim);
+
+      const engineLights = [
+        { pos: [-5.5, -4.5, 2.8], color: 0xff741a, intensity: 8, distance: 17 },
+        { pos: [7, 4.6, 3.2], color: 0xffb347, intensity: 5.5, distance: 13 },
+        { pos: [0.8, 10, 2.5], color: 0xff4f1a, intensity: 4.5, distance: 15 }
+      ];
+
+      for (const light of engineLights) {
+        const point = new THREE.PointLight(light.color, light.intensity, light.distance, 1.65);
+        point.position.set(...light.pos);
+        point.castShadow = true;
+        gearRig.add(point);
+
+        const glow = new THREE.Mesh(new THREE.SphereGeometry(0.32, 24, 16), glowMaterial);
+        glow.position.copy(point.position);
+        gearRig.add(glow);
+
+        const halo = new THREE.Mesh(new THREE.SphereGeometry(1.45, 32, 18), emberMaterial);
+        halo.position.copy(point.position);
+        gearRig.add(halo);
+      }
+
+      const smokeParticles = [];
+      const smokeGeometry = new THREE.SphereGeometry(0.4, 16, 10);
+      const smokeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x8a7461,
+        transparent: true,
+        opacity: 0.11,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      for (let i = 0; i < 70; i += 1) {
+        const smoke = new THREE.Mesh(smokeGeometry, smokeMaterial.clone());
+        smoke.position.set((Math.random() - 0.5) * 38, (Math.random() - 0.5) * 28, -1 + Math.random() * 7);
+        smoke.scale.setScalar(0.8 + Math.random() * 2.2);
+        smoke.userData = {
+          drift: 0.2 + Math.random() * 0.8,
+          phase: Math.random() * Math.PI * 2
+        };
+        smokeParticles.push(smoke);
+        scene.add(smoke);
+      }
+
+      function addScratches() {
+        const scratchMaterial = new THREE.LineBasicMaterial({
+          color: 0xe7d6b4,
+          transparent: true,
+          opacity: 0.13
+        });
+
+        for (let i = 0; i < 130; i += 1) {
+          const r = 3 + Math.random() * 20;
+          const a = Math.random() * Math.PI * 2;
+          const len = 0.25 + Math.random() * 0.8;
+          const points = [
+            new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0.95 + Math.random() * 0.35),
+            new THREE.Vector3(Math.cos(a + 0.02) * (r + len), Math.sin(a + 0.02) * (r + len), 0.95 + Math.random() * 0.35)
+          ];
+          const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), scratchMaterial);
+          gearRig.add(line);
+        }
+      }
+
+      addScratches();
+
+      function animate() {
+        const elapsed = clock.getElapsedTime();
+        const delta = clock.getDelta();
+
+        for (const gear of gears) {
+          gear.rotation.z = gear.userData.startRotation + elapsed * gear.userData.speed;
+
+          for (const child of gear.children) {
+            if (child.userData.pulseOffset === undefined) {
+              continue;
+            }
+
+            const pulse = 0.82 + Math.sin(elapsed * 4 + child.userData.pulseOffset) * 0.18;
+            child.scale.setScalar(pulse);
+          }
+        }
+
+        gearRig.rotation.z = -0.1 + Math.sin(elapsed * 0.055) * 0.085;
+        gearRig.rotation.x = -0.46 + Math.sin(elapsed * 0.075) * 0.055;
+        gearRig.position.x = Math.sin(elapsed * 0.04) * 1.8;
+        gearRig.position.y = Math.cos(elapsed * 0.035) * 1.3;
+
+        const dolly = Math.sin(elapsed * 0.055);
+        const sweep = elapsed * 0.045;
+        const cameraRadius = 18 + Math.sin(elapsed * 0.033) * 5;
+        camera.position.x = Math.sin(sweep) * cameraRadius + Math.sin(elapsed * 0.13) * 4.5;
+        camera.position.y = Math.cos(elapsed * 0.047) * 9 - 3.5;
+        camera.position.z = 33 + dolly * 12 + Math.cos(elapsed * 0.09) * 3.2;
+        camera.fov = 42 + Math.sin(elapsed * 0.06 + 1.2) * 5;
+        camera.updateProjectionMatrix();
+        camera.rotation.z = Math.sin(elapsed * 0.05) * 0.08;
+        camera.lookAt(
+          Math.sin(elapsed * 0.09) * 7,
+          Math.cos(elapsed * 0.08) * 5,
+          -3.5 + Math.sin(elapsed * 0.07) * 4
+        );
+
+        for (const [index, smoke] of smokeParticles.entries()) {
+          smoke.position.y += delta * smoke.userData.drift;
+          smoke.position.x += Math.sin(elapsed * 0.4 + smoke.userData.phase) * delta * 0.22;
+          smoke.material.opacity = 0.045 + Math.sin(elapsed * 0.7 + index) * 0.018;
+
+          if (smoke.position.y > 17) {
+            smoke.position.y = -17;
+            smoke.position.x = (Math.random() - 0.5) * 38;
+          }
+        }
+
+        bloom.strength = 0.66 + Math.sin(elapsed * 0.9) * 0.07;
+        composer.render();
+      }
+
+      renderer.setAnimationLoop(animate);
+
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+  </body>
+</html>

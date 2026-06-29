@@ -30,6 +30,13 @@ function App() {
   return (
     <div className={`site-shell ${showIntro ? 'intro-active' : ''}`}>
       <IntroOverlay visible={showIntro} onComplete={handleIntroComplete} />
+      <iframe
+        className="three-gear-background"
+        src={`${import.meta.env.BASE_URL}gear-world-three.html`}
+        title="Animated mechanical gear background"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
       <div className="bg-stars" />
       <div className="bg-orb orb-a" />
       <div className="bg-orb orb-b" />
