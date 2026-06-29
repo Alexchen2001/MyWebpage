@@ -219,6 +219,61 @@
   }
 }
 
+@keyframes experienceClickArrowNudge {
+  0%,
+  100% {
+    translate: 0 0;
+    opacity: 0.72;
+  }
+
+  50% {
+    translate: 0 5px;
+    opacity: 1;
+  }
+}
+
+.experience-click-arrow {
+  animation: experienceClickArrowNudge 1.35s ease-in-out infinite;
+}
+
+.experience-click-arrow-side {
+  animation-delay: 0.18s;
+}
+
+.experience-click-arrow-left {
+  animation-name: experienceClickArrowLeftNudge;
+}
+
+.experience-click-arrow-right {
+  animation-name: experienceClickArrowRightNudge;
+}
+
+@keyframes experienceClickArrowLeftNudge {
+  0%,
+  100% {
+    translate: 0 0;
+    opacity: 0.72;
+  }
+
+  50% {
+    translate: 5px 0;
+    opacity: 1;
+  }
+}
+
+@keyframes experienceClickArrowRightNudge {
+  0%,
+  100% {
+    translate: 0 0;
+    opacity: 0.72;
+  }
+
+  50% {
+    translate: -5px 0;
+    opacity: 1;
+  }
+}
+
 @media (max-width: 768px) {
   .cursor-glow {
     display: none;

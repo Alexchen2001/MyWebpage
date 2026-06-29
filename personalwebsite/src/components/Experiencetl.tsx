@@ -11,6 +11,9 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import OutlinedCard from './Expcard';
 import { CardData, ExperienceTrack } from '../types';
 
@@ -509,12 +512,74 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
               return (
                 <Box
                   key={track}
-                  className="track-bubble"
-                  component="button"
-                  onClick={() => handleTrackClick(track)}
                   sx={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     width: { xs: layout.sizeMobile, md: `${layout.sizeDesktop}px` },
                     height: { xs: layout.sizeMobile, md: `${layout.sizeDesktop}px` },
+                    flexShrink: 0,
+                    my: { xs: 1.2, md: 0 },
+                  }}
+                >
+                  <Box
+                    className="experience-click-arrow"
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      left: '50%',
+                      top: { xs: '-22px', md: '-34px' },
+                      transform: 'translateX(-50%)',
+                      color: '#ffd98a',
+                      filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.72))',
+                      zIndex: 4,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <ArrowDownwardRoundedIcon fontSize="medium" />
+                  </Box>
+                  <Box
+                    className="experience-click-arrow experience-click-arrow-side experience-click-arrow-left"
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      left: '-34px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      display: { xs: 'none', md: 'flex' },
+                      color: '#ffd98a',
+                      filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.72))',
+                      zIndex: 4,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <ArrowForwardRoundedIcon fontSize="medium" />
+                  </Box>
+                  <Box
+                    className="experience-click-arrow experience-click-arrow-side experience-click-arrow-right"
+                    aria-hidden="true"
+                    sx={{
+                      position: 'absolute',
+                      right: '-34px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      display: { xs: 'none', md: 'flex' },
+                      color: '#ffd98a',
+                      filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.72))',
+                      zIndex: 4,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <ArrowBackRoundedIcon fontSize="medium" />
+                  </Box>
+                  <Box
+                    className="track-bubble"
+                    component="button"
+                    onClick={() => handleTrackClick(track)}
+                    sx={{
+                      width: '100%',
+                      height: '100%',
                   borderRadius: '50%',
                   border: '1px solid rgba(255, 211, 142, 0.3)',
                   background:
@@ -606,6 +671,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   {track}
                 </Box>
               </Box>
+            </Box>
               );
             })}
           </Box>
@@ -720,7 +786,7 @@ const AlternateTimeline: React.FC<AlternateTimelineProps> = ({
                   },
                 }}
               >
-                Back to Bubbles
+                Back
               </Box>
             </Box>
 

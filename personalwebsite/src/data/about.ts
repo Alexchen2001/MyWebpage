@@ -9,7 +9,7 @@ export const aboutDescription = [
 ];
 
 export const aboutStats: StatItem[] = [
-  { title: 'Graduate GPA', value: '4.00/4.00', level: 0.62 },
+  { title: 'Graduate GPA', value: '3.75/4.00', level: 0.62 },
   { title: 'Production Events', value: '300K Planned Scale', level: 0.9 },
   { title: 'Coverage Achieved', value: '100% Unit Tests', level: 0.76 },
 ];
@@ -18,7 +18,7 @@ export const education: EducationItem[] = [
   {
     school: 'Georgia Institute of Technology',
     degree: 'Master of Science in Computer Science',
-    gpa: '4.00/4.00',
+    gpa: '3.75/4.00',
     date: 'August 2025 - Present',
     location: 'Atlanta, GA',
     coursework:
