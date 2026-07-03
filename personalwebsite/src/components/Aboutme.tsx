@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import ProfilePic from './assets/infoPic.jpg';
-import ResumePDF from './assets/Resume_AlexanderChen.pdf'; // Ensure you have the file in your assets folder
+import ResumePDF from './assets/Resume_FT_AlexanderChen.pdf';
 import { aboutDescription, aboutStats, aboutSummary, education, skills } from '../data/about';
 
 // Define Props
@@ -187,7 +187,7 @@ const ProfileSection: React.FC<ProfileSectionProps> = ({
                 },
               }}
               href={ResumePDF} // Link to the resume file
-              download="AlexanderChen_Resume.pdf" // Custom filename for the downloaded file
+              download="Resume_FT_AlexanderChen.pdf"
               endIcon={<DownloadRoundedIcon />}
             >
               Download Resume
